@@ -1,0 +1,111 @@
+/* === CORE THEME VARIABLES === */
+:root {
+  /* Core Theme Colors */
+  --background: #fafafa;
+  --foreground: #0B3B45;
+  --card: #ffffff;
+  --card-foreground: #0B3B45;
+  --popover: #fafafa;
+  --popover-foreground: #0B3B45;
+
+  /* Brand Colors */
+  --primary: #038A6C;
+  --primary-foreground: #fafafa;
+  --primary-light: #E7F7F7;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #1e293b;
+  --accent: #e2e8f0;
+  --accent-foreground: #0B3B45;
+
+  /* Neutral Colors */
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+
+  /* Status Colors */
+  --success: #038A6C;
+  --success-foreground: #fafafa;
+  --warning: #FFB700;
+  --destructive: #FF5630;
+  --destructive-foreground: #fafafa;
+
+  /* Interactive Elements */
+  --border: #cbd5e1;
+  --input: #cbd5e1;
+  --ring: #038A6C;
+  --radius: 0.375rem;
+
+  /* Component Backgrounds */
+  --component-background: #ffffff;
+
+  /* Neutral Grays */
+  --gray-50: #f8f9f9;
+  --gray-100: #f4f6f6;
+  --gray-200: #eff2f2;
+  --gray-border: #e7ebec;
+
+  /* Text Colors */
+  --text-muted: #8fa5a9;
+  --text-secondary: #3c626a;
+
+  /* Sidebar Theme */
+  --sidebar-background: #fafafa;
+  --sidebar-foreground: #1e293b;
+  --sidebar-primary: #0B3B45;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0B3B45;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #038A6C;
+}
+
+/* === DARK MODE VARIABLES === */
+.dark {
+  /* Core Theme Colors */
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --popover: #1e293b;
+  --popover-foreground: #f8fafc;
+
+  /* Brand Colors */
+  --primary: #04BF8A;
+  --primary-foreground: #fafafa;
+  --primary-light: #1a3d3d;
+  --secondary: #334155;
+  --secondary-foreground: #f8fafc;
+  --accent: #334155;
+  --accent-foreground: #f8fafc;
+
+  /* Neutral Colors */
+  --muted: #334155;
+  --muted-foreground: #94a3b8;
+
+  /* Status Colors */
+  --success: #04BF8A;
+  --success-foreground: #fafafa;
+  --warning: #FFC400;
+  --destructive: #FF7452;
+  --destructive-foreground: #0f172a;
+
+  /* Interactive Elements */
+  --border: #334155;
+  --input: #334155;
+  --ring: #04BF8A;
+
+  /* Sidebar Theme */
+  --sidebar-background: #1e293b;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-primary: #04BF8A;
+  --sidebar-primary-foreground: #0f172a;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #04BF8A;
+}
+
+
+/* === COMPONENT UTILITIES === */
+.bg-component {
+  background-color: var(--component-background);
+}
