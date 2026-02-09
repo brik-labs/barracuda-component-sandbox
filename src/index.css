@@ -1,4 +1,5 @@
 /* === CUSTOM STYLES IMPORTS === */
+@import "react-day-picker/style.css";
 @import "./styles/theme.css";
 @import "./styles/base.css";
 @import "./styles/animations.css";

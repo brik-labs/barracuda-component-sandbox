@@ -16,10 +16,43 @@ import { Progress } from '@shared/components/ui/progress'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/components/ui/table'
 import { SampleMetricCard } from '@/components/SampleMetricCard'
 
+// Filter components
+import { DateFilter } from '@shared/components/filters/components/date'
+import { AmountFilterDropdown } from '@shared/components/filters/components/amount'
+import { MultiSelectFilter } from '@shared/components/filters/base/MultiSelectFilter'
+import { SearchableSelectFilter } from '@shared/components/filters/base/SearchableSelectFilter'
+import {
+  BankFilter,
+  ChannelFilter,
+  CurrencyFilter,
+  ProcessorFilter,
+} from '@shared/components/filters/components/FilterFactory'
+import { SelectionActions } from '@shared/components/filters/components/SelectionActions'
+import { DatePicker, DateRangePicker } from '@shared/components/ui/date-picker'
+import type { DateFilterValue } from '@shared/types/dateFilter'
+import type { AmountFilterValue } from '@shared/types/amountFilter'
+import type { DateRange } from 'react-day-picker'
+
 export function ComponentShowcase() {
   const { theme, setTheme } = useTheme()
   const [checkboxChecked, setCheckboxChecked] = useState(false)
   const [switchChecked, setSwitchChecked] = useState(false)
+
+  // Filter states
+  const [dateFilterValue, setDateFilterValue] = useState<DateFilterValue | null>(null)
+  const [datePresetValue, setDatePresetValue] = useState<string | null>(null)
+  const [amountValue, setAmountValue] = useState<AmountFilterValue | null>(null)
+  const [multiSelectValue, setMultiSelectValue] = useState<string[]>([])
+  const [searchSelectValue, setSearchSelectValue] = useState<string | null>(null)
+  const [bankValue, setBankValue] = useState<string | null>(null)
+  const [channelValue, setChannelValue] = useState<string[]>([])
+  const [currencyValue, setCurrencyValue] = useState<string | null>(null)
+  const [processorValue, setProcessorValue] = useState<string[]>([])
+  const [selectionCount, setSelectionCount] = useState(3)
+
+  // Date picker states
+  const [pickerDate, setPickerDate] = useState<Date | undefined>(undefined)
+  const [pickerDateRange, setPickerDateRange] = useState<DateRange | undefined>(undefined)
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
@@ -76,13 +109,236 @@ export function ComponentShowcase() {
       <section>
         <h2 className="section-header mb-6">UI Primitives</h2>
 
-        <Tabs defaultValue="buttons" className="w-full">
+        <Tabs defaultValue="filters" className="w-full">
           <TabsList className="mb-6">
+            <TabsTrigger value="filters">Filters</TabsTrigger>
             <TabsTrigger value="buttons">Buttons</TabsTrigger>
             <TabsTrigger value="inputs">Inputs</TabsTrigger>
             <TabsTrigger value="display">Display</TabsTrigger>
             <TabsTrigger value="data">Data</TabsTrigger>
           </TabsList>
+
+          {/* Filters Tab */}
+          <TabsContent value="filters">
+            <div className="space-y-6">
+              {/* Date Filters */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Date Filters</CardTitle>
+                  <CardDescription>Operator-based and preset date filtering</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <Label className="mb-3 block text-xs text-muted-foreground">Full mode (operators: equal, before, after, between, last)</Label>
+                    <div className="flex flex-wrap gap-3 items-start">
+                      <DateFilter
+                        mode="full"
+                        label="Created Date"
+                        value={dateFilterValue}
+                        onChange={setDateFilterValue}
+                      />
+                      {dateFilterValue && (
+                        <code className="text-xs bg-muted px-2 py-1 rounded mt-1">
+                          {JSON.stringify(dateFilterValue)}
+                        </code>
+                      )}
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <Label className="mb-3 block text-xs text-muted-foreground">Select mode (preset options: today, last 7 days, etc.)</Label>
+                    <div className="flex flex-wrap gap-3 items-start">
+                      <DateFilter
+                        mode="select"
+                        label="Date Range"
+                        value={datePresetValue}
+                        onChange={setDatePresetValue}
+                      />
+                      {datePresetValue && (
+                        <code className="text-xs bg-muted px-2 py-1 rounded mt-1">
+                          {datePresetValue}
+                        </code>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Date Pickers */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Date Pickers</CardTitle>
+                  <CardDescription>Standalone date and date range pickers</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <Label className="mb-3 block text-xs text-muted-foreground">Single date picker</Label>
+                      <DatePicker
+                        date={pickerDate}
+                        onSelect={setPickerDate}
+                        placeholder="Pick a date"
+                        clearable
+                      />
+                    </div>
+                    <div>
+                      <Label className="mb-3 block text-xs text-muted-foreground">Compact variant</Label>
+                      <DatePicker
+                        date={pickerDate}
+                        onSelect={setPickerDate}
+                        variant="compact"
+                      />
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <Label className="mb-3 block text-xs text-muted-foreground">Date range picker (2 months)</Label>
+                    <DateRangePicker
+                      dateRange={pickerDateRange}
+                      onSelect={setPickerDateRange}
+                      placeholder="Select date range"
+                      numberOfMonths={2}
+                      className="w-[300px]"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Amount Filter */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Amount Filter</CardTitle>
+                  <CardDescription>Numeric filtering with operators (equal, between, greater/less than)</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex flex-wrap gap-3 items-start">
+                    <AmountFilterDropdown
+                      value={amountValue}
+                      onChange={setAmountValue}
+                      currency="$"
+                      filterConfig={{ key: 'amount', label: 'Amount', type: 'amountRange' }}
+                    />
+                    {amountValue && (
+                      <code className="text-xs bg-muted px-2 py-1 rounded mt-1">
+                        {JSON.stringify(amountValue)}
+                      </code>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Select Filters */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Select Filters</CardTitle>
+                  <CardDescription>Multi-select and searchable single-select with popover UI</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <Label className="mb-3 block text-xs text-muted-foreground">Multi-select filter (checkbox-based)</Label>
+                    <div className="flex flex-wrap gap-3 items-start">
+                      <MultiSelectFilter
+                        options={[
+                          { value: 'pending', label: 'Pending' },
+                          { value: 'approved', label: 'Approved' },
+                          { value: 'declined', label: 'Declined' },
+                          { value: 'refunded', label: 'Refunded' },
+                        ]}
+                        value={multiSelectValue}
+                        onChange={(v) => setMultiSelectValue(v || [])}
+                        filterConfig={{ key: 'status', label: 'Status', type: 'multiSelect' }}
+                      />
+                      {multiSelectValue.length > 0 && (
+                        <code className="text-xs bg-muted px-2 py-1 rounded mt-1">
+                          [{multiSelectValue.join(', ')}]
+                        </code>
+                      )}
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <Label className="mb-3 block text-xs text-muted-foreground">Searchable single-select filter</Label>
+                    <div className="flex flex-wrap gap-3 items-start">
+                      <SearchableSelectFilter
+                        options={[
+                          { value: 'us', label: 'United States' },
+                          { value: 'ca', label: 'Canada' },
+                          { value: 'uk', label: 'United Kingdom' },
+                          { value: 'de', label: 'Germany' },
+                          { value: 'fr', label: 'France' },
+                          { value: 'au', label: 'Australia' },
+                          { value: 'jp', label: 'Japan' },
+                        ]}
+                        value={searchSelectValue}
+                        onChange={setSearchSelectValue}
+                        filterConfig={{ key: 'country', label: 'Country', type: 'select' }}
+                        searchPlaceholder="Search countries..."
+                      />
+                      {searchSelectValue && (
+                        <code className="text-xs bg-muted px-2 py-1 rounded mt-1">
+                          {searchSelectValue}
+                        </code>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Factory Filters */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Factory Filters</CardTitle>
+                  <CardDescription>Pre-built filters created via createFilterComponent factory</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3">
+                    <BankFilter value={bankValue} onChange={(v) => setBankValue(v as string | null)} />
+                    <ChannelFilter value={channelValue} onChange={(v) => setChannelValue(v as string[] || [])} />
+                    <CurrencyFilter value={currencyValue} onChange={(v) => setCurrencyValue(v as string | null)} />
+                    <ProcessorFilter value={processorValue} onChange={(v) => setProcessorValue(v as string[] || [])} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Selection Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Selection Actions</CardTitle>
+                  <CardDescription>Bulk action bar shown when rows are selected</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Label className="text-xs text-muted-foreground">Selected count:</Label>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectionCount(Math.max(1, selectionCount - 1))}
+                      >
+                        -
+                      </Button>
+                      <span className="text-sm font-medium w-6 text-center">{selectionCount}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectionCount(selectionCount + 1)}
+                      >
+                        +
+                      </Button>
+                    </div>
+                  </div>
+                  <SelectionActions
+                    selectedCount={selectionCount}
+                    entityType="transaction"
+                    onCancel={() => {}}
+                    onFlag={() => {}}
+                    onExport={() => {}}
+                    onClearSelection={() => setSelectionCount(0)}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           {/* Buttons Tab */}
           <TabsContent value="buttons">

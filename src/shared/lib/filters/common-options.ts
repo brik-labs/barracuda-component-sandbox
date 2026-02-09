@@ -1,0 +1,107 @@
+/**
+ * Common filter options used across different filter types
+ * These options are reusable and can be shared between different filters
+ */
+export const commonOptions = {
+  currency: [
+    { value: "all", label: "All Currencies", category: "all" },
+    { value: "USD", label: "USD", category: "major", symbol: "$" },
+    { value: "EUR", label: "EUR", category: "major", symbol: "€" },
+    { value: "GBP", label: "GBP", category: "major", symbol: "£" },
+    { value: "BGN", label: "BGN", category: "regional", symbol: "лв" },
+    { value: "CAD", label: "CAD", category: "major", symbol: "C$" },
+    { value: "AUD", label: "AUD", category: "major", symbol: "A$" },
+    { value: "JPY", label: "JPY", category: "major", symbol: "¥" },
+    { value: "CHF", label: "CHF", category: "regional", symbol: "CHF" },
+  ],
+  paymentMethod: [
+    { value: "all", label: "All Methods", category: "all" },
+    { value: "card", label: "Card", category: "card", icon: "CreditCard" },
+    { value: "bank_transfer", label: "Bank Transfer", category: "banking", icon: "Building" },
+    { value: "wallet", label: "Digital Wallet", category: "digital", icon: "Wallet" },
+    { value: "ach", label: "ACH", category: "banking", icon: "Building" },
+    { value: "wire", label: "Wire Transfer", category: "banking", icon: "Building" },
+  ],
+  country: [
+    { value: "all", label: "All Countries", region: "all" },
+    { value: "US", label: "United States", region: "americas", code: "US" },
+    { value: "CA", label: "Canada", region: "americas", code: "CA" },
+    { value: "GB", label: "United Kingdom", region: "europe", code: "GB" },
+    { value: "DE", label: "Germany", region: "europe", code: "DE" },
+    { value: "FR", label: "France", region: "europe", code: "FR" },
+    { value: "AU", label: "Australia", region: "apac", code: "AU" },
+    { value: "JP", label: "Japan", region: "apac", code: "JP" },
+  ],
+  channel: [
+    { value: "online", label: "Online", icon: "Globe" },
+    { value: "mobile", label: "Mobile", icon: "Smartphone" },
+    { value: "pos", label: "Point of Sale", icon: "CreditCard" },
+    { value: "api", label: "API", icon: "Code" },
+  ],
+  programType: [
+    { value: "all", label: "All Types", category: "all" },
+    { value: "loyalty", label: "Loyalty", category: "customer" },
+    { value: "rewards", label: "Rewards", category: "customer" },
+    { value: "cashback", label: "Cashback", category: "financial" },
+    { value: "points", label: "Points", category: "customer" },
+  ],
+  terminalStore: [
+    { value: "store-1", label: "Main Store" },
+    { value: "store-2", label: "Downtown Branch" },
+    { value: "store-3", label: "Airport Shop" },
+  ],
+  terminalLocation: [
+    { value: "loc-1", label: "New York" },
+    { value: "loc-2", label: "San Francisco" },
+    { value: "loc-3", label: "London" },
+  ],
+  terminalType: [
+    { value: "all", label: "All Types" },
+    { value: "countertop", label: "Countertop" },
+    { value: "mobile", label: "Mobile" },
+    { value: "portable", label: "Portable" },
+    { value: "handheld", label: "Handheld" },
+    { value: "fixed", label: "Fixed" },
+    { value: "kiosk", label: "Kiosk" },
+  ],
+  organization: [
+    { value: "all", label: "All Organizations" },
+    { value: "org_alpha", label: "Org Alpha" },
+    { value: "org_beta", label: "Org Beta" },
+    { value: "org_gamma", label: "Org Gamma" },
+  ],
+  productPlatform: [
+    { value: "all", label: "All Product Platforms" },
+    { value: "ecommerce", label: "E-commerce" },
+    { value: "pos", label: "POS" },
+    { value: "mobile", label: "Mobile" },
+    { value: "saas", label: "SaaS" },
+  ],
+  processor: [
+    { value: "all", label: "All Processors" },
+    { value: "stripe", label: "Stripe" },
+    { value: "adyen", label: "Adyen" },
+    { value: "worldpay", label: "Worldpay" },
+    { value: "checkout", label: "Checkout.com" },
+    { value: "paypal", label: "PayPal" },
+  ],
+  bank: [
+    { value: "all", label: "All Banks" },
+    { value: "jpmorgan", label: "J.P. Morgan" },
+    { value: "bank_of_america", label: "Bank of America" },
+    { value: "wells_fargo", label: "Wells Fargo" },
+    { value: "citi", label: "Citi" },
+    { value: "hsbc", label: "HSBC" },
+  ],
+  ecommerceType: [
+    { value: "hosted_checkout", label: "Hosted Checkout" },
+    { value: "api", label: "API Integration" },
+    { value: "elements", label: "Drop-In Elements" },
+    { value: "drops", label: "Drops" },
+  ],
+  paymentLinkType: [
+    { value: "one-time", label: "One-time" },
+    { value: "subscription", label: "Subscription" },
+    { value: "donation", label: "Donation" },
+  ],
+}
