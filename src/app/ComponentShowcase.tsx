@@ -34,6 +34,8 @@ import type { AmountFilterValue } from '@shared/types/amountFilter';
 import type { DateRange } from 'react-day-picker';
 
 import { RuleBuilderModalExample } from '@/components/RuleBuilderModalExample';
+import ruleBuilderData from '@/data/rule-builder-data.json';
+import RuleBuilder from '@/components/RuleBuilder';
 
 export function ComponentShowcase() {
 	const { theme, setTheme } = useTheme();
@@ -89,6 +91,24 @@ export function ComponentShowcase() {
 
 			<Separator className='mb-10' />
 
+			{/* Add Rule Sample Component */}
+			<section className='mb-10'>
+				<h2 className='section-header mb-10'>Add Rule</h2>
+
+				<div className=''>
+					<Card>
+						<CardHeader>
+							<CardTitle className='text-foreground font-semibold text-lg'>Rule Parameters</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<RuleBuilder data={ruleBuilderData} />
+						</CardContent>
+					</Card>
+				</div>
+			</section>
+
+			<Separator className='mb-10' />
+
 			{/* Add Rule Modal Sample Component */}
 			<section className='mb-10'>
 				<h2 className='section-header mb-10'>Add Rule Modal</h2>
@@ -98,7 +118,7 @@ export function ComponentShowcase() {
 				</div>
 			</section>
 
-			<Separator className='my-10' />
+			<Separator className='mb-10' />
 
 			{/* UI Primitives Gallery */}
 			<section>

@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { cn } from '@shared/lib/utils';
+import { X } from 'lucide-react';
 
 const RuleBuilderModal = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => <div ref={ref} className={cn('tailwind classes', className)} {...props} />,
+	({ className, ...props }, ref) => <div ref={ref} className={cn('', className)} {...props} />,
 );
 RuleBuilderModal.displayName = 'RuleBuilderModal';
 
@@ -13,7 +14,7 @@ const RuleBuilderModalHeader = React.forwardRef<HTMLDivElement, React.HTMLAttrib
 RuleBuilderModalHeader.displayName = 'RuleBuilderModalHeader';
 
 const RuleBuilderModalHead = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
-	({ className, ...props }, ref) => <hgroup ref={ref} className={cn('relative mb-10 pr-10', className)} {...props} />,
+	({ className, ...props }, ref) => <hgroup ref={ref} className={cn('relative', className)} {...props} />,
 );
 RuleBuilderModalHead.displayName = 'RuleBuilderModalHead';
 
@@ -33,14 +34,14 @@ const RuleBuilderModalClose = React.forwardRef<HTMLButtonElement, React.HTMLAttr
 	({ className, children, ...props }, ref) => (
 		<button ref={ref} className={cn('absolute top-2 right-0', className)} type='button' {...props}>
 			{/* TODO: update */}
-			<span className='block text-7xl font-thin origin-center rotate-45 -mt-3'>+</span>
+			<X className='size-6' />
 		</button>
 	),
 );
 RuleBuilderModalClose.displayName = 'RuleBuilderModalClose';
 
 const RuleBuilderModalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => <div ref={ref} className={cn('relative mb-10 pr-10', className)} {...props} />,
+	({ className, ...props }, ref) => <div ref={ref} className={cn('', className)} {...props} />,
 );
 RuleBuilderModalBody.displayName = 'RuleBuilderModalBody';
 

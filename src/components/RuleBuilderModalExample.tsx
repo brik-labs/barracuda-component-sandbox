@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { cn } from '@shared/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { RuleBuilderExample } from '@/components/RuleBuilderExample';
 import {
 	RuleBuilderModal,
 	RuleBuilderModalBody,
@@ -13,9 +12,12 @@ import {
 	RuleBuilderModalTitle,
 } from '@/components/RuleBuilderModal';
 
+import ruleBuilderData from '@/data/rule-builder-data.json';
+import RuleBuilder from '@/components/RuleBuilder';
+
 const RuleBuilderModalExample = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
-		<div ref={ref} className={cn('tailwind classes', className)} {...props}>
+		<div ref={ref} className={cn('', className)} {...props}>
 			<RuleBuilderModal>
 				<RuleBuilderModalHeader>
 					<RuleBuilderModalHead>
@@ -35,7 +37,7 @@ const RuleBuilderModalExample = React.forwardRef<HTMLDivElement, React.HTMLAttri
 							<CardTitle className='text-foreground font-semibold text-lg'>Rule Parameters</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<RuleBuilderExample />
+							<RuleBuilder data={ruleBuilderData} />
 						</CardContent>
 					</Card>
 				</RuleBuilderModalBody>

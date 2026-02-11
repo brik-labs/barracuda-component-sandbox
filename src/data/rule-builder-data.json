@@ -1,0 +1,73 @@
+{
+	"params": [
+		{
+			"name": "transaction_date",
+			"label": "Transaction date",
+			"type": "date",
+			"prefix": null,
+			"operators": {
+				"options": [
+					{ "value": "is", "label": "is" },
+					{ "value": "is_after", "label": "is after" },
+					{ "value": "is_before", "label": "is before" },
+					{ "value": "is_between", "label": "is between" },
+					{ "value": "is_not", "label": "is not" }
+				],
+				"defaultOption": "is_after"
+			}
+		},
+		{
+			"name": "amount",
+			"label": "Amount",
+			"type": "number",
+			"prefix": "€",
+			"operators": {
+				"options": [
+					{ "value": "is", "label": "is" },
+					{ "value": "is_after", "label": "is after" },
+					{ "value": "is_before", "label": "is before" },
+					{ "value": "is_between", "label": "is between" },
+					{ "value": "is_not", "label": "is not" }
+				],
+				"defaultOption": "is_between"
+			}
+		},
+		{
+			"name": "card_brand",
+			"label": "Card brand",
+			"type": "select",
+			"prefix": null,
+			"operators": {
+				"options": [
+					{ "value": "is", "label": "is" },
+					{ "value": "is_not", "label": "is not" }
+				],
+				"defaultOption": "is"
+			},
+			"options": [
+				{ "value": "visa", "label": "Visa" },
+				{ "value": "mastercard", "label": "Mastercard" },
+				{ "value": "american_express", "label": "American Express" },
+				{ "value": "discover", "label": "Discover" }
+			]
+		},
+		{
+			"name": "test",
+			"label": "Test",
+			"type": "text",
+			"prefix": null,
+			"operators": {
+				"options": [
+					{ "value": "is", "label": "is" },
+					{ "value": "is_not", "label": "is not" }
+				],
+				"defaultOption": "is"
+			}
+		}
+	],
+	"actions": [
+		{ "name": "action ", "label": "Action" },
+		{ "name": "action 1", "label": "Action 1" },
+		{ "name": "action 2", "label": "Action 2" }
+	]
+}
