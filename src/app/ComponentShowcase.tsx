@@ -111,7 +111,7 @@ export function ComponentShowcase() {
 			<section className='mb-10'>
 				<h2 className='section-header mb-10'>Add Rule Modal</h2>
 
-				<div className='flex gap-4'>
+				<div className='flex flex-wrap gap-4'>
 					<RuleBuilderModal
 						title='Rule Builder Modal'
 						description='Phasellus lacus massa cras ante integer tortor eu consequat.'

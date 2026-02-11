@@ -45,8 +45,8 @@ const RuleBuilderModal = ({
 			</DialogTrigger>
 			<DialogPortal>
 				<DialogOverlay className='fixed inset-0 bg-foreground opacity-80' />
-				<div className={cn('fixed top-0 right-0 size-full p-4', size === 'sm' && 'max-w-2xl')}>
-					<DialogContent className='flex flex-col size-full rounded-[2rem] p-6 bg-background'>
+				<div className={cn('fixed top-0 right-0 size-full p-3 md:p-4', size === 'sm' && 'max-w-2xl')}>
+					<DialogContent className='flex flex-col size-full rounded-[1rem] md:rounded-[2rem] p-3 md:p-6 bg-background'>
 						<div className='relative mb-6 pr-12'>
 							{title && (
 								<DialogTitle className='mb-0.5 text-foreground text-2xl font-medium'>
