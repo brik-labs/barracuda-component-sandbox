@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, HTMLAttributes, useEffect, useState } from 'react';
+import { forwardRef, Fragment, HTMLAttributes, useEffect, useMemo, useState } from 'react';
 import { cn } from '@shared/lib/utils';
 import { Separator } from '@shared/components/ui/separator';
 import { SeparatorWithText } from '@/shared/components/ui/separator-with-text';
@@ -42,28 +42,44 @@ interface RuleBuilderProps extends HTMLAttributes<HTMLDivElement> {
 	data: RuleBuilderData;
 }
 
+type RowData = {
+	param: string | null;
+	operator: string | null;
+	value: string | null;
+};
+
 const RuleBuilder = forwardRef<HTMLDivElement, RuleBuilderProps>(({ className, data, ...props }, ref) => {
-	const [rowsData, setRowsData] = useState([{ param: '', operator: '', value: '' }]);
-	const paramOptions = data.params.map(({ name, label }: any) => ({ label, value: name }));
+	const [rowsData, setRowsData] = useState<RowData[]>([{ param: null, operator: null, value: null }]);
 
-	const addNewRow = () => setRowsData([...rowsData, { param: '', operator: '', value: '' }]);
-	const removeRow = (index: number) => setRowsData(rowsData.filter((_, i) => i !== index));
-	const handleParamUpdate = (index: number, param: string) => {
-		const updatedRows = [...rowsData];
-		updatedRows[index] = { ...updatedRows[index], param };
-		setRowsData(updatedRows);
+	const paramOptions = useMemo(() => {
+		return data.params.map(({ name, label }) => ({ label, value: name }));
+	}, [data.params]);
+
+	const addNewRow = () => setRowsData((prev) => [...prev, { param: null, operator: null, value: null }]);
+	const removeRow = (index: number) => setRowsData((prev) => prev.filter((_, i) => i !== index));
+
+	const handleParamUpdate = (index: number, param: string | null) => {
+		setRowsData((prev) => {
+			const next = [...prev];
+			next[index] = { ...next[index], param, operator: null, value: null };
+			return next;
+		});
 	};
 
-	const handleOperatorUpdate = (index: number, operator: string) => {
-		const updatedRows = [...rowsData];
-		updatedRows[index] = { ...updatedRows[index], operator };
-		setRowsData(updatedRows);
+	const handleOperatorUpdate = (index: number, operator: string | null) => {
+		setRowsData((prev) => {
+			const next = [...prev];
+			next[index] = { ...next[index], operator, value: null };
+			return next;
+		});
 	};
 
-	const handleValueUpdate = (index: number, value: string) => {
-		const updatedRows = [...rowsData];
-		updatedRows[index] = { ...updatedRows[index], value };
-		setRowsData(updatedRows);
+	const handleValueUpdate = (index: number, value: string | null) => {
+		setRowsData((prev) => {
+			const next = [...prev];
+			next[index] = { ...next[index], value };
+			return next;
+		});
 	};
 
 	const handleApplyRule = () => {
@@ -87,13 +103,12 @@ const RuleBuilder = forwardRef<HTMLDivElement, RuleBuilderProps>(({ className, d
 							)}
 
 							<RuleBuilderParamRow
-								data={rowData}
+								rowData={rowData}
 								params={{ data: data.params, options: paramOptions }}
-								onParamChange={(param: string) => handleParamUpdate(index, param)}
-								onOperatorChange={(operator: string) => handleOperatorUpdate(index, operator)}
-								value={rowData.value}
-								onValueChange={(value: string) => handleValueUpdate(index, value)}
-								onRemove={rowsData.length > 1 ? () => removeRow(index) : null}
+								onParamChange={(param: string | null) => handleParamUpdate(index, param)}
+								onOperatorChange={(operator: string | null) => handleOperatorUpdate(index, operator)}
+								onValueChange={(value: string | null) => handleValueUpdate(index, value)}
+								onRemove={rowsData.length > 1 ? () => removeRow(index) : undefined}
 							/>
 						</Fragment>
 					))}
@@ -104,7 +119,6 @@ const RuleBuilder = forwardRef<HTMLDivElement, RuleBuilderProps>(({ className, d
 					type='button'
 					onClick={addNewRow}>
 					<CirclePlus className='size-4' />
-
 					<span>Add criteria</span>
 				</button>
 			</RuleBuilderSection>
@@ -151,12 +165,48 @@ const RuleBuilder = forwardRef<HTMLDivElement, RuleBuilderProps>(({ className, d
 });
 RuleBuilder.displayName = 'RuleBuilder';
 
-const NumberInput = ({ prefix, placeholder, value, onChange }: any) => {
-	const [internalValue, setInternalValue] = useState<number | undefined>(value ?? undefined);
+const NumberInput = ({
+	prefix,
+	placeholder,
+	value,
+	onChange,
+}: {
+	prefix?: string | HTMLElement | null;
+	placeholder?: string;
+	value: string | null;
+	onChange: (value: string | null) => void;
+}) => {
+	const [internalValue, setInternalValue] = useState<number | undefined>(() => {
+		if (value === null || value === undefined || value === '') return undefined;
+		const n = Number(value);
+		return Number.isFinite(n) ? n : undefined;
+	});
 
-	const handleChange = (value: number | undefined) => {
-		setInternalValue(value);
-		onChange(value?.toString());
+	useEffect(() => {
+		if (value === null || value === undefined || value === '') {
+			setInternalValue(undefined);
+			return;
+		}
+		const n = Number(value);
+		setInternalValue(Number.isFinite(n) ? n : undefined);
+	}, [value]);
+
+	const handleChange = (raw: string) => {
+		if (raw === '') {
+			setInternalValue(undefined);
+			onChange(null);
+			return;
+		}
+
+		const n = Number(raw);
+		if (!Number.isFinite(n)) {
+			setInternalValue(undefined);
+			onChange(null);
+			return;
+		}
+
+		setInternalValue(n);
+		onChange(String(n));
 	};
 
 	return (
@@ -165,8 +215,8 @@ const NumberInput = ({ prefix, placeholder, value, onChange }: any) => {
 				className={cn('w-full', prefix && 'pl-7')}
 				type='number'
 				placeholder={placeholder}
-				onInput={(e) => handleChange(Number(e.currentTarget.value))}
-				value={internalValue}
+				onInput={(e) => handleChange(e.currentTarget.value)}
+				value={internalValue ?? ''}
 			/>
 
 			{prefix && (
@@ -175,19 +225,23 @@ const NumberInput = ({ prefix, placeholder, value, onChange }: any) => {
 						'absolute top-1/2 left-3 -translate-y-1/2 font-light text-muted-foreground',
 						internalValue === undefined && 'opacity-60',
 					)}>
-					{prefix}
+					{prefix as any}
 				</span>
 			)}
 		</div>
 	);
 };
 
-const DateInput = ({ value, onChange }: any) => {
-	const [pickerDate, setPickerDate] = useState<any>(value ? new Date(value) : null);
+const DateInput = ({ value, onChange }: { value: string | null; onChange: (value: string | null) => void }) => {
+	const [pickerDate, setPickerDate] = useState<Date | undefined>(() => (value ? new Date(value) : undefined));
+
+	useEffect(() => {
+		setPickerDate(value ? new Date(value) : undefined);
+	}, [value]);
 
 	const handleSelect = (selectedValue: Date | undefined) => {
-		setPickerDate(selectedValue);
-		onChange(selectedValue?.toISOString());
+		setPickerDate(selectedValue ?? undefined);
+		onChange(selectedValue ? selectedValue.toISOString() : null);
 	};
 
 	return (
@@ -195,24 +249,34 @@ const DateInput = ({ value, onChange }: any) => {
 	);
 };
 
-const DateRangeInput = ({ value, onChange }: any) => {
+const DateRangeInput = ({ value, onChange }: { value: string | null; onChange: (value: string | null) => void }) => {
 	const [from, to] = value?.split('_') || [null, null];
-	const [pickerDateRange, setPickerDateRange] = useState<DateRange | undefined>(
-		from && to ? { from: new Date(from), to: new Date(to) } : undefined,
-	);
+	const [pickerDateRange, setPickerDateRange] = useState<DateRange | undefined>(() => {
+		return from && to ? { from: new Date(from), to: new Date(to) } : undefined;
+	});
+
+	useEffect(() => {
+		if (!value) {
+			setPickerDateRange(undefined);
+			return;
+		}
+		const [f, t] = value.split('_');
+		setPickerDateRange(f && t ? { from: new Date(f), to: new Date(t) } : undefined);
+	}, [value]);
 
 	const handleSelect = (selectedValue: DateRange | undefined) => {
 		setPickerDateRange(selectedValue);
 
-		if (selectedValue?.from === selectedValue?.to) {
+		if (!selectedValue?.from || !selectedValue?.to) {
+			onChange(null);
 			return;
 		}
 
-		onChange(
-			selectedValue?.from && selectedValue?.to
-				? `${selectedValue.from.toISOString()}_${selectedValue.to.toISOString()}`
-				: '',
-		);
+		if (selectedValue.from.getTime() === selectedValue.to.getTime()) {
+			return;
+		}
+
+		onChange(`${selectedValue.from.toISOString()}_${selectedValue.to.toISOString()}`);
 	};
 
 	return (
@@ -226,69 +290,143 @@ const DateRangeInput = ({ value, onChange }: any) => {
 	);
 };
 
-const MultiSelectInput = ({ id, name, placeholder, value, options, onChange }: any) => {
-	const [multiSelectValue, setMultiSelectValue] = useState<any>(value?.split(',') || []);
+const MultiSelectInput = ({
+	id,
+	name,
+	placeholder,
+	value,
+	options,
+	onChange,
+}: {
+	id?: string;
+	name?: string;
+	placeholder?: string;
+	value: string | null;
+	options?: { value: string; label: string }[];
+	onChange: (value: string | null) => void;
+}) => {
+	const [multiSelectValue, setMultiSelectValue] = useState<string[]>(() => (value ? value.split(',') : []));
 
-	const handleChange = (value: any) => {
-		setMultiSelectValue(value || []);
-		onChange(value.join(',') || null);
+	useEffect(() => {
+		setMultiSelectValue(value ? value.split(',') : []);
+	}, [value]);
+
+	const handleChange = (next: string[]) => {
+		const safe = Array.isArray(next) ? next : [];
+		setMultiSelectValue(safe);
+		onChange(safe.length ? safe.join(',') : null);
 	};
 
 	return (
 		<MultiSelect
-			options={options}
+			options={options ?? []}
 			noWrap
 			value={multiSelectValue}
-			onChange={handleChange}
-			config={{ key: id ?? name, label: placeholder }}
+			onChange={handleChange as any}
+			config={{ key: id ?? name ?? 'multi-select', label: placeholder ?? 'Select' }}
 		/>
 	);
 };
 
-const RuleBuilderParamRow = forwardRef<any, any>(
-	(
-		{ className, rowData, params, onRemove, onParamChange, onOperatorChange, value, onValueChange, ...props },
-		ref,
-	) => {
-		const [selectedParam, setSelectedParam] = useState<any>(null);
-		const [operators, setOperators] = useState<any>(null);
-		const [selectedOperator, setSelectedOperator] = useState<any>(null);
-		const [isDate, setIsDate] = useState(false);
-		const [isBetween, setIsBetween] = useState(false);
+type RuleBuilderParamRowProps = {
+	className?: string;
+	rowData: RowData;
+	params: {
+		data: RuleBuilderParam[];
+		options: { label: string; value: string }[];
+	};
+	onRemove?: () => void;
+	onParamChange: (param: string | null) => void;
+	onOperatorChange: (operator: string | null) => void;
+	onValueChange: (value: string | null) => void;
+} & HTMLAttributes<HTMLDivElement>;
 
-		const handleOperatorSelectChange = (value: string) =>
-			setSelectedParam(params.data.find((param: any) => param.name === value) ?? null);
+const RuleBuilderParamRow = forwardRef<HTMLDivElement, RuleBuilderParamRowProps>(
+	({ className, rowData, params, onRemove, onParamChange, onOperatorChange, onValueChange, ...props }, ref) => {
+		const [selectedParam, setSelectedParam] = useState<RuleBuilderParam | null>(() => {
+			return rowData.param ? (params.data.find((p) => p.name === rowData.param) ?? null) : null;
+		});
 
-		const handleOptionsSelectChange = (value: string) =>
-			setSelectedOperator(operators?.options.find((option: any) => option.value === value) ?? null);
+		const [operators, setOperators] = useState<RuleBuilderParamOperators | null>(null);
+		const [selectedOperator, setSelectedOperator] = useState<RuleBuilderParamOperator | null>(null);
 
+		const isDate = selectedParam?.type === 'date';
+		const isBetween = selectedOperator?.value === 'is_between';
+
+		const handleParamSelectChange = (paramName: string) => {
+			const nextParam = params.data.find((param) => param.name === paramName) ?? null;
+			setSelectedParam(nextParam);
+		};
+
+		const handleOperatorSelectChange = (operatorValue: string) => {
+			const nextOperator = operators?.options.find((option) => option.value === operatorValue) ?? null;
+			setSelectedOperator(nextOperator);
+		};
+
+		// keep selectedParam in sync with external rowData.param
 		useEffect(() => {
-			if (selectedParam) {
-				setOperators(selectedParam.operators);
-				setIsDate(selectedParam.type === 'date');
+			const nextParam = rowData.param ? (params.data.find((p) => p.name === rowData.param) ?? null) : null;
+			setSelectedParam(nextParam);
+		}, [rowData.param, params.data]);
+
+		// update operators when param changes
+		useEffect(() => {
+			if (!selectedParam) {
+				setOperators(null);
+				setSelectedOperator(null);
+				onParamChange(null);
+				onOperatorChange(null);
+				onValueChange(null);
+				return;
 			}
-			onParamChange(selectedParam?.name);
+
+			setOperators(selectedParam.operators);
+			onParamChange(selectedParam.name);
+
+			// reset dependent fields
+			onOperatorChange(null);
 			onValueChange(null);
+			setSelectedOperator(null);
 		}, [selectedParam]);
 
+		// set default operator when operators set
 		useEffect(() => {
-			if (operators) {
-				const option =
-					operators.options.find((option: any) => option.value === operators.defaultOption) ?? null;
+			if (!operators) return;
 
-				setSelectedOperator(option);
-			}
+			const defaultOp =
+				operators.options.find((option) => option.value === operators.defaultOption) ??
+				operators.options[0] ??
+				null;
+
+			setSelectedOperator(defaultOp);
+			onOperatorChange(defaultOp?.value ?? null);
+			onValueChange(null);
 		}, [operators]);
 
+		// if operator changes via UI
 		useEffect(() => {
-			if (selectedOperator) {
-				setIsBetween(selectedOperator.value === 'is_between');
-			}
-			onOperatorChange(selectedOperator?.value);
+			if (!selectedOperator) return;
+			onOperatorChange(selectedOperator.value);
 			onValueChange(null);
-		}, [selectedOperator]);
+		}, [selectedOperator?.value]);
 
-		const getTypeBasedInput = ({ name, placeholder, options, value, onChange, prefix }: any) => {
+		const getTypeBasedInput = ({
+			name,
+			placeholder,
+			options,
+			value,
+			onChange,
+			prefix,
+		}: {
+			name: string;
+			placeholder?: string;
+			options?: { value: string; label: string }[];
+			value: string | null;
+			onChange: (value: string | null) => void;
+			prefix?: string | HTMLElement | null;
+		}) => {
+			if (!selectedParam) return null;
+
 			switch (selectedParam.type) {
 				case 'number':
 					return <NumberInput prefix={prefix} placeholder={placeholder} value={value} onChange={onChange} />;
@@ -313,25 +451,51 @@ const RuleBuilderParamRow = forwardRef<any, any>(
 						<Input
 							placeholder={placeholder}
 							value={value ?? ''}
-							onInput={(e) => onChange(e.currentTarget.value)}
+							onInput={(e) => onChange(e.currentTarget.value || null)}
 						/>
 					);
 			}
 		};
 
-		const TypeBasedInput = ({ name, placeholder, options, value, onChange, prefix }: any) =>
-			getTypeBasedInput({ name, placeholder, options, value, onChange, prefix });
+		if (!selectedParam) {
+			return (
+				<RuleBuilderRow ref={ref} className={cn('', className)} {...props}>
+					<RuleBuilderCols count={3}>
+						<RuleBuilderCol>
+							<Select value={rowData.param ?? undefined} onValueChange={handleParamSelectChange}>
+								<SelectTrigger>
+									<SelectValue placeholder='Parameter' />
+								</SelectTrigger>
+								<SelectContent>
+									{params.options.map((option) => (
+										<SelectItem key={option.value} value={option.value}>
+											{option.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</RuleBuilderCol>
+					</RuleBuilderCols>
+
+					{onRemove && (
+						<button className='shrink-0' type='button' onClick={onRemove}>
+							<CircleX className='size-4' />
+						</button>
+					)}
+				</RuleBuilderRow>
+			);
+		}
 
 		return (
 			<RuleBuilderRow ref={ref} className={cn('', className)} {...props}>
 				<RuleBuilderCols count={3}>
 					<RuleBuilderCol>
-						<Select onValueChange={handleOperatorSelectChange}>
+						<Select value={selectedParam.name} onValueChange={handleParamSelectChange}>
 							<SelectTrigger>
 								<SelectValue placeholder='Parameter' />
 							</SelectTrigger>
 							<SelectContent>
-								{params.options.map((option: any) => (
+								{params.options.map((option) => (
 									<SelectItem key={option.value} value={option.value}>
 										{option.label}
 									</SelectItem>
@@ -343,13 +507,13 @@ const RuleBuilderParamRow = forwardRef<any, any>(
 					{operators && (
 						<RuleBuilderCol>
 							<Select
-								value={selectedOperator?.value ?? operators?.defaultOption ?? undefined}
-								onValueChange={handleOptionsSelectChange}>
+								value={selectedOperator?.value ?? operators.defaultOption ?? undefined}
+								onValueChange={handleOperatorSelectChange}>
 								<SelectTrigger>
 									<SelectValue placeholder='Operator' />
 								</SelectTrigger>
 								<SelectContent>
-									{operators?.options.map(({ value, label }: any, index: number) => (
+									{operators.options.map(({ value, label }, index) => (
 										<SelectItem key={index} value={value}>
 											{label}
 										</SelectItem>
@@ -364,44 +528,42 @@ const RuleBuilderParamRow = forwardRef<any, any>(
 							{isBetween && !isDate ? (
 								<RuleBuilderCols count={2}>
 									<RuleBuilderCol>
-										<TypeBasedInput
-											name={`${selectedParam.name}_from`}
-											placeholder='From'
-											prefix={selectedParam.prefix}
-											options={selectedParam.options}
-											value={value?.split('-')[0] || ''}
-											onChange={(val: string) => {
-												const to = value?.split('-')[1] ?? '';
-												return onValueChange(`${val}-${to}`);
-											}}
-										/>
+										{getTypeBasedInput({
+											name: `${selectedParam.name}_from`,
+											placeholder: 'From',
+											prefix: selectedParam.prefix,
+											options: selectedParam.options,
+											value: rowData.value?.split('-')[0] ?? null,
+											onChange: (val) => {
+												const to = rowData.value?.split('-')[1] ?? '';
+												onValueChange(`${val ?? ''}-${to}`);
+											},
+										})}
 									</RuleBuilderCol>
 
 									<RuleBuilderCol>
-										<TypeBasedInput
-											name={`${selectedParam.name}_to`}
-											placeholder='To'
-											prefix={selectedParam.prefix}
-											options={selectedParam.options}
-											value={value?.split('-')[1] || ''}
-											onChange={(val: string) => {
-												const from = value?.split('-')[0] ?? '';
-												return onValueChange(`${from}-${val}`);
-											}}
-										/>
+										{getTypeBasedInput({
+											name: `${selectedParam.name}_to`,
+											placeholder: 'To',
+											prefix: selectedParam.prefix,
+											options: selectedParam.options,
+											value: rowData.value?.split('-')[1] ?? null,
+											onChange: (val) => {
+												const from = rowData.value?.split('-')[0] ?? '';
+												onValueChange(`${from}-${val ?? ''}`);
+											},
+										})}
 									</RuleBuilderCol>
 								</RuleBuilderCols>
 							) : (
-								<RuleBuilderCol>
-									<TypeBasedInput
-										name={selectedParam.name}
-										placeholder={selectedParam.label}
-										prefix={selectedParam.prefix}
-										options={selectedParam.options}
-										value={value}
-										onChange={onValueChange}
-									/>
-								</RuleBuilderCol>
+								getTypeBasedInput({
+									name: selectedParam.name,
+									placeholder: selectedParam.label,
+									prefix: selectedParam.prefix,
+									options: selectedParam.options,
+									value: rowData.value,
+									onChange: onValueChange,
+								})
 							)}
 						</RuleBuilderCol>
 					)}
@@ -442,16 +604,27 @@ interface RuleBuilderColsProps extends HTMLAttributes<HTMLDivElement> {
 	count?: number;
 }
 
-const RuleBuilderCols = forwardRef<HTMLDivElement, RuleBuilderColsProps>(({ className, count, ...props }, ref) => (
-	<div ref={ref} className={cn(' flex-1 gap-2', count ? `grid grid-cols-${count}` : 'flex', className)} {...props} />
-));
+const RuleBuilderCols = forwardRef<HTMLDivElement, RuleBuilderColsProps>(({ className, count, ...props }, ref) => {
+	const gridColsClass =
+		count === 1
+			? 'grid grid-cols-1'
+			: count === 2
+				? 'grid grid-cols-2'
+				: count === 3
+					? 'grid grid-cols-3'
+					: count === 4
+						? 'grid grid-cols-4'
+						: '';
+
+	return <div ref={ref} className={cn('flex-1 gap-2', count ? gridColsClass : 'flex', className)} {...props} />;
+});
 RuleBuilderCols.displayName = 'RuleBuilderCols';
 
 interface RuleBuilderColProps extends HTMLAttributes<HTMLDivElement> {
 	colSpan?: string;
 }
 
-const RuleBuilderCol = forwardRef<HTMLDivElement, RuleBuilderColProps>(({ className, colSpan, ...props }, ref) => (
+const RuleBuilderCol = forwardRef<HTMLDivElement, RuleBuilderColProps>(({ className, ...props }, ref) => (
 	<div ref={ref} className={cn('flex-1', className)} {...props} />
 ));
 RuleBuilderCol.displayName = 'RuleBuilderCol';
