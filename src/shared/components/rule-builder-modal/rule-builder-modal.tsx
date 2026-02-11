@@ -34,13 +34,12 @@ const RuleBuilderModal = ({
 
 	const handleRuleChange = (rows: RowData[], action: string | null) => setRule({ rows, action });
 
+	const submitRule = () => {
+		console.log(rule);
+	};
+
 	return (
-		<Dialog
-			onOpenChange={(isOpen) => {
-				if (!isOpen) {
-					console.log(rule);
-				}
-			}}>
+		<Dialog>
 			<DialogTrigger asChild>
 				<Button variant='action'>{buttonText}</Button>
 			</DialogTrigger>
@@ -87,7 +86,7 @@ const RuleBuilderModal = ({
 							</DialogClose>
 
 							<DialogClose asChild>
-								<Button variant='action'>
+								<Button variant='action' onClick={submitRule}>
 									<CirclePlus className='size-6' />
 
 									<span>Add Rule</span>
