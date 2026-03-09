@@ -55,7 +55,7 @@ const RuleBuilderModal = ({
 							)}
 
 							{description && (
-								<DialogDescription className='text-sm text-teal-300 -tracking-[0.01em]'>
+								<DialogDescription className='text-sm text-muted-foreground -tracking-[0.01em]'>
 									{description}
 								</DialogDescription>
 							)}

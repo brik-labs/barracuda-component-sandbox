@@ -10,6 +10,7 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Roobert', system-ui, sans-serif;
+  font-weight: 300;
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 

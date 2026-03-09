@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@shared/components/ui/hooks/use-theme';
 import { Button } from '@shared/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@shared/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@shared/components/ui/card';
 import { Input } from '@shared/components/ui/input';
 import { Label } from '@shared/components/ui/label';
 import { Badge } from '@shared/components/ui/badge';
@@ -13,7 +13,6 @@ import { Textarea } from '@shared/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@shared/components/ui/tabs';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@shared/components/ui/select';
 import { Progress } from '@shared/components/ui/progress';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/components/ui/table';
 import { SampleMetricCard } from '@/components/SampleMetricCard';
 
 // Filter components
@@ -36,6 +35,10 @@ import type { DateRange } from 'react-day-picker';
 import ruleBuilderData from '@/data/rule-builder-data.json';
 import RuleBuilder from '@/shared/components/rule-builder/rule-builder';
 import RuleBuilderModal from '@/shared/components/rule-builder-modal/rule-builder-modal';
+
+import { DataTableDemo } from './demos/DataTableDemo';
+import { DetailViewDemo } from './demos/DetailViewDemo';
+import { EditPatternsDemo } from './demos/EditPatternsDemo';
 
 export function ComponentShowcase() {
 	const { theme, setTheme } = useTheme();
@@ -132,27 +135,41 @@ export function ComponentShowcase() {
 			<section>
 				<h2 className='section-header mb-6'>UI Primitives</h2>
 
-				<Tabs defaultValue='filters' className='w-full'>
+				<Tabs defaultValue='buttons' className='w-full'>
 					<TabsList className='mb-6'>
-						<TabsTrigger value='filters'>Filters</TabsTrigger>
 						<TabsTrigger value='buttons'>Buttons</TabsTrigger>
-						<TabsTrigger value='inputs'>Inputs</TabsTrigger>
 						<TabsTrigger value='display'>Display</TabsTrigger>
-						<TabsTrigger value='data'>Data</TabsTrigger>
+						<TabsTrigger value='inputs'>Inputs</TabsTrigger>
+						<TabsTrigger value='filters'>Filters</TabsTrigger>
+						<TabsTrigger value='data-table'>Data Table</TabsTrigger>
+						<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
+						<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
 					</TabsList>
+
+					{/* Data Table Tab */}
+					<TabsContent value='data-table'>
+						<DataTableDemo />
+					</TabsContent>
+
+					{/* Detail View Tab */}
+					<TabsContent value='detail-view'>
+						<DetailViewDemo />
+					</TabsContent>
+
+					{/* Edit Patterns Tab */}
+					<TabsContent value='edit-patterns'>
+						<EditPatternsDemo />
+					</TabsContent>
 
 					{/* Filters Tab */}
 					<TabsContent value='filters'>
-						<div className='space-y-6'>
+						<div className='space-y-8'>
 							{/* Date Filters */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Date Filters</CardTitle>
-									<CardDescription>Operator-based and preset date filtering</CardDescription>
-								</CardHeader>
-								<CardContent className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Date Filters</h3>
+								<div className='space-y-6'>
 									<div>
-										<Label className='mb-3 block text-xs text-muted-foreground'>
+										<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 											Full mode (operators: equal, before, after, between, last)
 										</Label>
 										<div className='flex flex-wrap gap-3 items-start'>
@@ -169,9 +186,8 @@ export function ComponentShowcase() {
 											)}
 										</div>
 									</div>
-									<Separator />
 									<div>
-										<Label className='mb-3 block text-xs text-muted-foreground'>
+										<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 											Select mode (preset options: today, last 7 days, etc.)
 										</Label>
 										<div className='flex flex-wrap gap-3 items-start'>
@@ -188,19 +204,18 @@ export function ComponentShowcase() {
 											)}
 										</div>
 									</div>
-								</CardContent>
-							</Card>
+								</div>
+							</div>
+
+							<Separator />
 
 							{/* Date Pickers */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Date Pickers</CardTitle>
-									<CardDescription>Standalone date and date range pickers</CardDescription>
-								</CardHeader>
-								<CardContent className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Date Pickers</h3>
+								<div className='space-y-6'>
 									<div className='grid grid-cols-2 gap-6'>
 										<div>
-											<Label className='mb-3 block text-xs text-muted-foreground'>
+											<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 												Single date picker
 											</Label>
 											<DatePicker
@@ -211,15 +226,14 @@ export function ComponentShowcase() {
 											/>
 										</div>
 										<div>
-											<Label className='mb-3 block text-xs text-muted-foreground'>
+											<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 												Compact variant
 											</Label>
 											<DatePicker date={pickerDate} onSelect={setPickerDate} variant='compact' />
 										</div>
 									</div>
-									<Separator />
 									<div>
-										<Label className='mb-3 block text-xs text-muted-foreground'>
+										<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 											Date range picker (2 months)
 										</Label>
 										<DateRangePicker
@@ -230,45 +244,37 @@ export function ComponentShowcase() {
 											className='w-[300px]'
 										/>
 									</div>
-								</CardContent>
-							</Card>
+								</div>
+							</div>
+
+							<Separator />
 
 							{/* Amount Filter */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Amount Filter</CardTitle>
-									<CardDescription>
-										Numeric filtering with operators (equal, between, greater/less than)
-									</CardDescription>
-								</CardHeader>
-								<CardContent className='space-y-4'>
-									<div className='flex flex-wrap gap-3 items-start'>
-										<AmountFilterDropdown
-											value={amountValue}
-											onChange={setAmountValue}
-											currency='$'
-											filterConfig={{ key: 'amount', label: 'Amount', type: 'amountRange' }}
-										/>
-										{amountValue && (
-											<code className='text-xs bg-muted px-2 py-1 rounded mt-1'>
-												{JSON.stringify(amountValue)}
-											</code>
-										)}
-									</div>
-								</CardContent>
-							</Card>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Amount Filter</h3>
+								<div className='flex flex-wrap gap-3 items-start'>
+									<AmountFilterDropdown
+										value={amountValue}
+										onChange={setAmountValue}
+										currency='$'
+										filterConfig={{ key: 'amount', label: 'Amount', type: 'amountRange' }}
+									/>
+									{amountValue && (
+										<code className='text-xs bg-muted px-2 py-1 rounded mt-1'>
+											{JSON.stringify(amountValue)}
+										</code>
+									)}
+								</div>
+							</div>
+
+							<Separator />
 
 							{/* Select Filters */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Select Filters</CardTitle>
-									<CardDescription>
-										Multi-select and searchable single-select with popover UI
-									</CardDescription>
-								</CardHeader>
-								<CardContent className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Select Filters</h3>
+								<div className='space-y-6'>
 									<div>
-										<Label className='mb-3 block text-xs text-muted-foreground'>
+										<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 											Multi-select filter (checkbox-based)
 										</Label>
 										<div className='flex flex-wrap gap-3 items-start'>
@@ -290,9 +296,8 @@ export function ComponentShowcase() {
 											)}
 										</div>
 									</div>
-									<Separator />
 									<div>
-										<Label className='mb-3 block text-xs text-muted-foreground'>
+										<Label className='mb-3 block text-sm text-muted-foreground font-normal'>
 											Searchable single-select filter
 										</Label>
 										<div className='flex flex-wrap gap-3 items-start'>
@@ -318,48 +323,42 @@ export function ComponentShowcase() {
 											)}
 										</div>
 									</div>
-								</CardContent>
-							</Card>
+								</div>
+							</div>
+
+							<Separator />
 
 							{/* Factory Filters */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Factory Filters</CardTitle>
-									<CardDescription>
-										Pre-built filters created via createFilterComponent factory
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<div className='flex flex-wrap gap-3'>
-										<BankFilter
-											value={bankValue}
-											onChange={(v) => setBankValue(v as string | null)}
-										/>
-										<ChannelFilter
-											value={channelValue}
-											onChange={(v) => setChannelValue((v as string[]) || [])}
-										/>
-										<CurrencyFilter
-											value={currencyValue}
-											onChange={(v) => setCurrencyValue(v as string | null)}
-										/>
-										<ProcessorFilter
-											value={processorValue}
-											onChange={(v) => setProcessorValue((v as string[]) || [])}
-										/>
-									</div>
-								</CardContent>
-							</Card>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Factory Filters</h3>
+								<div className='flex flex-wrap gap-3'>
+									<BankFilter
+										value={bankValue}
+										onChange={(v) => setBankValue(v as string | null)}
+									/>
+									<ChannelFilter
+										value={channelValue}
+										onChange={(v) => setChannelValue((v as string[]) || [])}
+									/>
+									<CurrencyFilter
+										value={currencyValue}
+										onChange={(v) => setCurrencyValue(v as string | null)}
+									/>
+									<ProcessorFilter
+										value={processorValue}
+										onChange={(v) => setProcessorValue((v as string[]) || [])}
+									/>
+								</div>
+							</div>
+
+							<Separator />
 
 							{/* Selection Actions */}
-							<Card>
-								<CardHeader>
-									<CardTitle className='text-lg'>Selection Actions</CardTitle>
-									<CardDescription>Bulk action bar shown when rows are selected</CardDescription>
-								</CardHeader>
-								<CardContent className='space-y-4'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Selection Actions</h3>
+								<div className='space-y-4'>
 									<div className='flex items-center gap-3'>
-										<Label className='text-xs text-muted-foreground'>Selected count:</Label>
+										<Label className='text-sm text-muted-foreground font-normal'>Selected count:</Label>
 										<div className='flex items-center gap-2'>
 											<Button
 												variant='outline'
@@ -386,19 +385,16 @@ export function ComponentShowcase() {
 										onExport={() => {}}
 										onClearSelection={() => setSelectionCount(0)}
 									/>
-								</CardContent>
-							</Card>
+								</div>
+							</div>
 						</div>
 					</TabsContent>
 
 					{/* Buttons Tab */}
 					<TabsContent value='buttons'>
-						<Card>
-							<CardHeader>
-								<CardTitle className='text-lg'>Buttons</CardTitle>
-								<CardDescription>Button variants and sizes</CardDescription>
-							</CardHeader>
-							<CardContent className='space-y-6'>
+						<div className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Variants</h3>
 								<div className='flex flex-wrap gap-3'>
 									<Button>Default</Button>
 									<Button variant='destructive'>Destructive</Button>
@@ -407,141 +403,92 @@ export function ComponentShowcase() {
 									<Button variant='ghost'>Ghost</Button>
 									<Button variant='link'>Link</Button>
 								</div>
+							</div>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Action Variants</h3>
 								<div className='flex flex-wrap gap-3'>
 									<Button variant='action'>Action</Button>
 									<Button variant='action-outline'>Action Outline</Button>
 								</div>
+							</div>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Sizes</h3>
 								<div className='flex flex-wrap gap-3 items-center'>
 									<Button size='sm'>Small</Button>
 									<Button size='default'>Default</Button>
 									<Button size='lg'>Large</Button>
 								</div>
-							</CardContent>
-						</Card>
+							</div>
+						</div>
 					</TabsContent>
 
 					{/* Inputs Tab */}
 					<TabsContent value='inputs'>
-						<Card>
-							<CardHeader>
-								<CardTitle className='text-lg'>Form Controls</CardTitle>
-								<CardDescription>Inputs, selects, and toggles</CardDescription>
-							</CardHeader>
-							<CardContent className='space-y-6'>
-								<div className='grid grid-cols-2 gap-4'>
-									<div className='space-y-2'>
-										<Label>Text Input</Label>
-										<Input placeholder='Enter text...' />
-									</div>
-									<div className='space-y-2'>
-										<Label>Select</Label>
-										<Select>
-											<SelectTrigger>
-												<SelectValue placeholder='Choose option...' />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value='opt1'>Option 1</SelectItem>
-												<SelectItem value='opt2'>Option 2</SelectItem>
-												<SelectItem value='opt3'>Option 3</SelectItem>
-											</SelectContent>
-										</Select>
-									</div>
+						<div className='space-y-6'>
+							<div className='grid grid-cols-2 gap-4'>
+								<div className='space-y-2'>
+									<Label>Text Input</Label>
+									<Input placeholder='Enter text...' />
 								</div>
 								<div className='space-y-2'>
-									<Label>Textarea</Label>
-									<Textarea placeholder='Enter a longer message...' />
+									<Label>Select</Label>
+									<Select>
+										<SelectTrigger>
+											<SelectValue placeholder='Choose option...' />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value='opt1'>Option 1</SelectItem>
+											<SelectItem value='opt2'>Option 2</SelectItem>
+											<SelectItem value='opt3'>Option 3</SelectItem>
+										</SelectContent>
+									</Select>
 								</div>
-								<div className='flex items-center gap-6'>
-									<div className='flex items-center gap-2'>
-										<Checkbox
-											checked={checkboxChecked}
-											onCheckedChange={(v) => setCheckboxChecked(v === true)}
-										/>
-										<Label>Checkbox</Label>
-									</div>
-									<div className='flex items-center gap-2'>
-										<Switch checked={switchChecked} onCheckedChange={setSwitchChecked} />
-										<Label>Switch</Label>
-									</div>
+							</div>
+							<div className='space-y-2'>
+								<Label>Textarea</Label>
+								<Textarea placeholder='Enter a longer message...' />
+							</div>
+							<div className='flex items-center gap-6'>
+								<div className='flex items-center gap-2'>
+									<Checkbox
+										checked={checkboxChecked}
+										onCheckedChange={(v) => setCheckboxChecked(v === true)}
+									/>
+									<Label>Checkbox</Label>
 								</div>
-							</CardContent>
-						</Card>
+								<div className='flex items-center gap-2'>
+									<Switch checked={switchChecked} onCheckedChange={setSwitchChecked} />
+									<Label>Switch</Label>
+								</div>
+							</div>
+						</div>
 					</TabsContent>
 
 					{/* Display Tab */}
 					<TabsContent value='display'>
-						<Card>
-							<CardHeader>
-								<CardTitle className='text-lg'>Display Elements</CardTitle>
-								<CardDescription>Badges, progress, and separators</CardDescription>
-							</CardHeader>
-							<CardContent className='space-y-6'>
-								<div>
-									<Label className='mb-3 block'>Badges</Label>
-									<div className='flex flex-wrap gap-2'>
-										<Badge>Default</Badge>
-										<Badge variant='success'>Success</Badge>
-										<Badge variant='warning'>Warning</Badge>
-										<Badge variant='danger'>Danger</Badge>
-										<Badge variant='secondary'>Secondary</Badge>
-									</div>
+						<div className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Badges</h3>
+								<div className='flex flex-wrap gap-2'>
+									<Badge>Default</Badge>
+									<Badge variant='success'>Success</Badge>
+									<Badge variant='warning'>Warning</Badge>
+									<Badge variant='danger'>Danger</Badge>
+									<Badge variant='secondary'>Secondary</Badge>
 								</div>
-								<Separator />
-								<div>
-									<Label className='mb-3 block'>Progress</Label>
-									<div className='space-y-3'>
-										<Progress value={25} className='h-2' />
-										<Progress value={60} className='h-2' />
-										<Progress value={90} className='h-2' />
-									</div>
+							</div>
+							<Separator />
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Progress</h3>
+								<div className='space-y-3'>
+									<Progress value={25} className='h-2' />
+									<Progress value={60} className='h-2' />
+									<Progress value={90} className='h-2' />
 								</div>
-							</CardContent>
-						</Card>
+							</div>
+						</div>
 					</TabsContent>
 
-					{/* Data Tab */}
-					<TabsContent value='data'>
-						<Card>
-							<CardHeader>
-								<CardTitle className='text-lg'>Data Table</CardTitle>
-								<CardDescription>Table component with styled headers</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<Table>
-									<TableHeader>
-										<TableRow>
-											<TableHead>Name</TableHead>
-											<TableHead>Status</TableHead>
-											<TableHead>Amount</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										<TableRow>
-											<TableCell className='font-medium'>INV-001</TableCell>
-											<TableCell>
-												<Badge variant='success'>Paid</Badge>
-											</TableCell>
-											<TableCell>$250.00</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell className='font-medium'>INV-002</TableCell>
-											<TableCell>
-												<Badge variant='warning'>Pending</Badge>
-											</TableCell>
-											<TableCell>$150.00</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell className='font-medium'>INV-003</TableCell>
-											<TableCell>
-												<Badge variant='danger'>Overdue</Badge>
-											</TableCell>
-											<TableCell>$350.00</TableCell>
-										</TableRow>
-									</TableBody>
-								</Table>
-							</CardContent>
-						</Card>
-					</TabsContent>
 				</Tabs>
 			</section>
 		</div>
