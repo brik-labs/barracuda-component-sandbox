@@ -7,7 +7,7 @@ import { Z_INDEX_CLASSES } from "@shared/lib/z-index"
 import { Checkbox } from "./checkbox"
 
 const STYLES = {
-  trigger: "flex h-10 w-full items-center justify-between rounded-[10px] border border-input bg-white px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&>span]:line-clamp-1 [&>span]:font-light [&>span]:leading-tight [&[data-placeholder]>span]:text-muted-foreground [&[data-placeholder]>span]:opacity-60",
+  trigger: "flex h-10 w-full items-center justify-between rounded-[10px] border border-input bg-card px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&>span]:line-clamp-1 [&>span]:font-light [&>span]:leading-tight [&[data-placeholder]>span]:text-muted-foreground [&[data-placeholder]>span]:opacity-60",
 
   content: "relative max-h-96 w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md",
 

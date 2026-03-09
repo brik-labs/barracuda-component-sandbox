@@ -12,7 +12,7 @@ interface LoadingSkeletonProps {
 const barStyle: React.CSSProperties = {
   height: 14,
   borderRadius: 4,
-  background: "linear-gradient(90deg, #efefef 25%, #f7f7f7 50%, #efefef 75%)",
+  background: "linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%)",
   backgroundSize: "200% 100%",
   animation: "skeleton-sweep 1.5s ease-in-out infinite",
 }
@@ -22,6 +22,14 @@ export const LoadingSkeleton = memo<LoadingSkeletonProps>(
     return (
       <div className={cn("relative w-full p-4", className)}>
         <style>{`
+          :root {
+            --skeleton-base: #efefef;
+            --skeleton-highlight: #f7f7f7;
+          }
+          .dark {
+            --skeleton-base: #2d3d4e;
+            --skeleton-highlight: #374b5e;
+          }
           @keyframes skeleton-sweep {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }

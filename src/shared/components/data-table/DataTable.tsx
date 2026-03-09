@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useMemo } from "react"
 import { Table } from "@shared/components/ui/table"
 import { cn } from "@shared/lib/utils"
 import type { DataTableProps } from "@shared/types/data-table"
@@ -10,6 +10,16 @@ import { DataTableBody } from "./DataTableBody"
 import { useDataTableSelection } from "./hooks/use-data-table-selection"
 import { useTableScroll } from "./hooks/use-table-scroll"
 import { useScrollToActiveRow } from "./hooks/use-scroll-to-active-row"
+
+function defaultSortFn<T extends Record<string, any>>(a: T, b: T, key: string): number {
+  const aVal = a[key]
+  const bVal = b[key]
+  if (aVal == null && bVal == null) return 0
+  if (aVal == null) return -1
+  if (bVal == null) return 1
+  if (typeof aVal === "number" && typeof bVal === "number") return aVal - bVal
+  return String(aVal).localeCompare(String(bVal))
+}
 
 export function DataTable<T extends Record<string, any>>({
   data,
@@ -25,6 +35,8 @@ export function DataTable<T extends Record<string, any>>({
   activeItemId,
   selectedItems = [],
   onSelectionChange,
+  sort,
+  onSortChange,
   emptyIcon,
   emptyTitle,
   emptyDescription,
@@ -44,6 +56,20 @@ export function DataTable<T extends Record<string, any>>({
       onSelectionChange,
       getItemId,
     })
+
+  // Sort data
+  const sortedData = useMemo(() => {
+    if (!sort || !data?.length) return data
+    const column = columns.find((c) => c.key === sort.key)
+    if (!column) return data
+    const sorted = [...data].sort((a, b) => {
+      const result = column.sortFn
+        ? column.sortFn(a, b)
+        : defaultSortFn(a, b, sort.key)
+      return sort.direction === "desc" ? -result : result
+    })
+    return sorted
+  }, [data, sort, columns])
 
   // Flatten grouped actions for internal row components
   const flatRowActions = rowActions as any
@@ -83,9 +109,11 @@ export function DataTable<T extends Record<string, any>>({
             showRightShadow={showRightShadow}
             selectionState={selectionState}
             onToggleAllSelection={toggleAllSelection}
+            sort={sort}
+            onSortChange={onSortChange}
           />
           <DataTableBody
-            data={data}
+            data={sortedData}
             columns={columns}
             selectedItems={selectedItems}
             hasSelection={hasSelection}

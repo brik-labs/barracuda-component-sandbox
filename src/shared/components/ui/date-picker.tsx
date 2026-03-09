@@ -102,7 +102,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(({
           ref={ref}
           variant="outline"
           className={cn(
-            "text-left font-normal bg-white",
+            "text-left font-normal bg-card",
             DATE_PICKER_STYLES.trigger,
             isCompact
               ? `${DATE_PICKER_STYLES.compact.height} ${DATE_PICKER_STYLES.compact.padding} ${DATE_PICKER_STYLES.compact.fontSize} ${DATE_PICKER_STYLES.compact.gap} ${DATE_PICKER_STYLES.compact.width}`
@@ -184,7 +184,7 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
           ref={ref}
           variant="outline"
           className={cn(
-            "w-full text-left font-normal px-4 gap-2 bg-white",
+            "w-full text-left font-normal px-4 gap-2 bg-card",
             DATE_PICKER_STYLES.trigger,
             iconPosition === "left" ? "justify-start" : "justify-between",
             !dateRange?.from && "text-muted-foreground",

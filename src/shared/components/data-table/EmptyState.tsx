@@ -23,7 +23,7 @@ export function EmptyState({
       role="region"
     >
       <div className="flex flex-col gap-6 items-center text-center w-full">
-        <div className="bg-white border border-[#F4F6F6] rounded-xl p-2 size-12 flex items-center justify-center shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
+        <div className="bg-card border border-border rounded-xl p-2 size-12 flex items-center justify-center shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
           <Icon className="size-6 text-sidebar-primary" />
         </div>
         <div className="flex flex-col gap-2 w-full">

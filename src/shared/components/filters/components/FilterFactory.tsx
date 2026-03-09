@@ -18,13 +18,6 @@ export const ChannelFilter = createFilterComponent(
   commonOptions.channel
 )
 
-export const LocationFilter = createFilterComponent(
-  "location",
-  "Location",
-  "singleSelect",
-  commonOptions.country
-)
-
 export const MerchantFilter = createFilterComponent(
   "merchant",
   "Merchant",

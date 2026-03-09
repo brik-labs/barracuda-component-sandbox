@@ -80,8 +80,8 @@ export function ActionDropdown<T>({
             size="icon"
             className={cn(
               "h-7 w-7 rounded-lg border border-transparent transition-all duration-200",
-              "hover:bg-white hover:border-sidebar-border hover:shadow-sm",
-              "data-[state=open]:bg-white data-[state=open]:border-sidebar-border data-[state=open]:shadow-sm",
+              "hover:bg-card hover:border-sidebar-border hover:shadow-sm",
+              "data-[state=open]:bg-card data-[state=open]:border-sidebar-border data-[state=open]:shadow-sm",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               triggerClassName
             )}

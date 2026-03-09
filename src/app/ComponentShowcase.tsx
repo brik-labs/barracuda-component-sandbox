@@ -39,6 +39,7 @@ import RuleBuilderModal from '@/shared/components/rule-builder-modal/rule-builde
 import { DataTableDemo } from './demos/DataTableDemo';
 import { DetailViewDemo } from './demos/DetailViewDemo';
 import { EditPatternsDemo } from './demos/EditPatternsDemo';
+import { ChartsDemo } from './demos/ChartsDemo';
 
 export function ComponentShowcase() {
 	const { theme, setTheme } = useTheme();
@@ -78,93 +79,121 @@ export function ComponentShowcase() {
 
 			<Separator className='mb-10' />
 
-			{/* Sample Component */}
+			{/* ===== UI Primitives ===== */}
 			<section className='mb-10'>
-				<h2 className='section-header mb-4'>Your Component</h2>
-				<p className='text-sm text-muted-foreground mb-6'>
-					This is a sample component built with the shared primitives. Create your own in{' '}
-					<code className='font-mono text-xs bg-muted px-1.5 py-0.5 rounded'>src/components/</code>
-				</p>
-				<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-					<SampleMetricCard title='Total Revenue' value='$48,290' change='+12.5%' trend='up' />
-					<SampleMetricCard title='Active Users' value='2,847' change='+4.2%' trend='up' />
-					<SampleMetricCard title='Churn Rate' value='1.8%' change='-0.3%' trend='down' />
-				</div>
-			</section>
-
-			<Separator className='mb-10' />
-
-			{/* Add Rule Sample Component */}
-			<section className='mb-10'>
-				<h2 className='section-header mb-10'>Add Rule</h2>
-
-				<Card>
-					<CardHeader>
-						<CardTitle className='text-foreground font-semibold text-lg'>Rule Parameters</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<RuleBuilder data={ruleBuilderData} />
-					</CardContent>
-				</Card>
-			</section>
-
-			<Separator className='mb-10' />
-
-			{/* Add Rule Modal Sample Component */}
-			<section className='mb-10'>
-				<h2 className='section-header mb-10'>Add Rule Modal</h2>
-
-				<div className='flex flex-wrap gap-4'>
-					<RuleBuilderModal
-						title='Rule Builder Modal'
-						description='Phasellus lacus massa cras ante integer tortor eu consequat.'
-						buttonText='Open Rule Builder Modal'
-					/>
-					<RuleBuilderModal
-						title='Rule Builder Modal'
-						description='Phasellus lacus massa cras ante integer tortor eu consequat.'
-						buttonText='Open Rule Builder Modal - Size LG'
-						size='lg'
-					/>
-				</div>
-			</section>
-
-			<Separator className='mb-10' />
-
-			{/* UI Primitives Gallery */}
-			<section>
 				<h2 className='section-header mb-6'>UI Primitives</h2>
 
-				<Tabs defaultValue='buttons' className='w-full'>
+				<Tabs defaultValue='display' className='w-full'>
 					<TabsList className='mb-6'>
-						<TabsTrigger value='buttons'>Buttons</TabsTrigger>
 						<TabsTrigger value='display'>Display</TabsTrigger>
+						<TabsTrigger value='buttons'>Buttons</TabsTrigger>
 						<TabsTrigger value='inputs'>Inputs</TabsTrigger>
 						<TabsTrigger value='filters'>Filters</TabsTrigger>
-						<TabsTrigger value='data-table'>Data Table</TabsTrigger>
-						<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
-						<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
+						<TabsTrigger value='charts'>Charts</TabsTrigger>
 					</TabsList>
 
-					{/* Data Table Tab */}
-					<TabsContent value='data-table'>
-						<DataTableDemo />
+					{/* Buttons Tab */}
+					<TabsContent value='buttons'>
+						<div className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Variants</h3>
+								<div className='flex flex-wrap gap-3'>
+									<Button>Default</Button>
+									<Button variant='destructive'>Destructive</Button>
+									<Button variant='outline'>Outline</Button>
+									<Button variant='secondary'>Secondary</Button>
+									<Button variant='ghost'>Ghost</Button>
+									<Button variant='link'>Link</Button>
+								</div>
+							</div>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Action Variants</h3>
+								<div className='flex flex-wrap gap-3'>
+									<Button variant='action'>Action</Button>
+									<Button variant='action-outline'>Action Outline</Button>
+								</div>
+							</div>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Sizes</h3>
+								<div className='flex flex-wrap gap-3 items-center'>
+									<Button size='sm'>Small</Button>
+									<Button size='default'>Default</Button>
+									<Button size='lg'>Large</Button>
+								</div>
+							</div>
+						</div>
 					</TabsContent>
 
-					{/* Detail View Tab */}
-					<TabsContent value='detail-view'>
-						<DetailViewDemo />
+					{/* Display Tab */}
+					<TabsContent value='display'>
+						<div className='space-y-6'>
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Badges</h3>
+								<div className='flex flex-wrap gap-2'>
+									<Badge>Default</Badge>
+									<Badge variant='success'>Success</Badge>
+									<Badge variant='warning'>Warning</Badge>
+									<Badge variant='danger'>Danger</Badge>
+									<Badge variant='secondary'>Secondary</Badge>
+								</div>
+							</div>
+							<Separator />
+							<div>
+								<h3 className='text-base font-semibold mb-3'>Progress</h3>
+								<div className='space-y-3'>
+									<Progress value={25} className='h-2' />
+									<Progress value={60} className='h-2' />
+									<Progress value={90} className='h-2' />
+								</div>
+							</div>
+						</div>
 					</TabsContent>
 
-					{/* Edit Patterns Tab */}
-					<TabsContent value='edit-patterns'>
-						<EditPatternsDemo />
+					{/* Inputs Tab */}
+					<TabsContent value='inputs'>
+						<div className='space-y-6'>
+							<div className='grid grid-cols-2 gap-4'>
+								<div className='space-y-2'>
+									<Label>Text Input</Label>
+									<Input placeholder='Enter text...' />
+								</div>
+								<div className='space-y-2'>
+									<Label>Select</Label>
+									<Select>
+										<SelectTrigger>
+											<SelectValue placeholder='Choose option...' />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value='opt1'>Option 1</SelectItem>
+											<SelectItem value='opt2'>Option 2</SelectItem>
+											<SelectItem value='opt3'>Option 3</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+							<div className='space-y-2'>
+								<Label>Textarea</Label>
+								<Textarea placeholder='Enter a longer message...' />
+							</div>
+							<div className='flex items-center gap-6'>
+								<div className='flex items-center gap-2'>
+									<Checkbox
+										checked={checkboxChecked}
+										onCheckedChange={(v) => setCheckboxChecked(v === true)}
+									/>
+									<Label>Checkbox</Label>
+								</div>
+								<div className='flex items-center gap-2'>
+									<Switch checked={switchChecked} onCheckedChange={setSwitchChecked} />
+									<Label>Switch</Label>
+								</div>
+							</div>
+						</div>
 					</TabsContent>
 
 					{/* Filters Tab */}
 					<TabsContent value='filters'>
 						<div className='space-y-8'>
-							{/* Date Filters */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Date Filters</h3>
 								<div className='space-y-6'>
@@ -209,7 +238,6 @@ export function ComponentShowcase() {
 
 							<Separator />
 
-							{/* Date Pickers */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Date Pickers</h3>
 								<div className='space-y-6'>
@@ -249,7 +277,6 @@ export function ComponentShowcase() {
 
 							<Separator />
 
-							{/* Amount Filter */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Amount Filter</h3>
 								<div className='flex flex-wrap gap-3 items-start'>
@@ -269,7 +296,6 @@ export function ComponentShowcase() {
 
 							<Separator />
 
-							{/* Select Filters */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Select Filters</h3>
 								<div className='space-y-6'>
@@ -328,7 +354,6 @@ export function ComponentShowcase() {
 
 							<Separator />
 
-							{/* Factory Filters */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Factory Filters</h3>
 								<div className='flex flex-wrap gap-3'>
@@ -353,7 +378,6 @@ export function ComponentShowcase() {
 
 							<Separator />
 
-							{/* Selection Actions */}
 							<div>
 								<h3 className='text-base font-semibold mb-3'>Selection Actions</h3>
 								<div className='space-y-4'>
@@ -390,105 +414,82 @@ export function ComponentShowcase() {
 						</div>
 					</TabsContent>
 
-					{/* Buttons Tab */}
-					<TabsContent value='buttons'>
-						<div className='space-y-6'>
-							<div>
-								<h3 className='text-base font-semibold mb-3'>Variants</h3>
-								<div className='flex flex-wrap gap-3'>
-									<Button>Default</Button>
-									<Button variant='destructive'>Destructive</Button>
-									<Button variant='outline'>Outline</Button>
-									<Button variant='secondary'>Secondary</Button>
-									<Button variant='ghost'>Ghost</Button>
-									<Button variant='link'>Link</Button>
-								</div>
-							</div>
-							<div>
-								<h3 className='text-base font-semibold mb-3'>Action Variants</h3>
-								<div className='flex flex-wrap gap-3'>
-									<Button variant='action'>Action</Button>
-									<Button variant='action-outline'>Action Outline</Button>
-								</div>
-							</div>
-							<div>
-								<h3 className='text-base font-semibold mb-3'>Sizes</h3>
-								<div className='flex flex-wrap gap-3 items-center'>
-									<Button size='sm'>Small</Button>
-									<Button size='default'>Default</Button>
-									<Button size='lg'>Large</Button>
-								</div>
-							</div>
+					{/* Charts Tab */}
+					<TabsContent value='charts'>
+						<ChartsDemo />
+					</TabsContent>
+				</Tabs>
+			</section>
+
+			<Separator className='mb-10' />
+
+			{/* ===== Page Components ===== */}
+			<section>
+				<h2 className='section-header mb-6'>Page Components</h2>
+
+				<Tabs defaultValue='data-table' className='w-full'>
+					<TabsList className='mb-6'>
+						<TabsTrigger value='data-table'>Data Table</TabsTrigger>
+						<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
+						<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
+						<TabsTrigger value='rules'>Rules</TabsTrigger>
+						<TabsTrigger value='info-box'>Info Box</TabsTrigger>
+					</TabsList>
+
+					{/* Info Box Tab */}
+					<TabsContent value='info-box'>
+						<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+							<SampleMetricCard title='Total Revenue' value='$48,290' change='+12.5%' trend='up' />
+							<SampleMetricCard title='Active Users' value='2,847' change='+4.2%' trend='up' />
+							<SampleMetricCard title='Churn Rate' value='1.8%' change='-0.3%' trend='down' />
 						</div>
 					</TabsContent>
 
-					{/* Inputs Tab */}
-					<TabsContent value='inputs'>
-						<div className='space-y-6'>
-							<div className='grid grid-cols-2 gap-4'>
-								<div className='space-y-2'>
-									<Label>Text Input</Label>
-									<Input placeholder='Enter text...' />
-								</div>
-								<div className='space-y-2'>
-									<Label>Select</Label>
-									<Select>
-										<SelectTrigger>
-											<SelectValue placeholder='Choose option...' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value='opt1'>Option 1</SelectItem>
-											<SelectItem value='opt2'>Option 2</SelectItem>
-											<SelectItem value='opt3'>Option 3</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-							</div>
-							<div className='space-y-2'>
-								<Label>Textarea</Label>
-								<Textarea placeholder='Enter a longer message...' />
-							</div>
-							<div className='flex items-center gap-6'>
-								<div className='flex items-center gap-2'>
-									<Checkbox
-										checked={checkboxChecked}
-										onCheckedChange={(v) => setCheckboxChecked(v === true)}
+					{/* Rules Tab */}
+					<TabsContent value='rules'>
+						<div className='space-y-10'>
+							<Card>
+								<CardHeader>
+									<CardTitle className='text-foreground font-semibold text-lg'>Rule Parameters</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<RuleBuilder data={ruleBuilderData} />
+								</CardContent>
+							</Card>
+
+							<div>
+								<h3 className='text-base font-semibold mb-4'>Rule Builder Modal</h3>
+								<div className='flex flex-wrap gap-4'>
+									<RuleBuilderModal
+										title='Rule Builder Modal'
+										description='Phasellus lacus massa cras ante integer tortor eu consequat.'
+										buttonText='Open Rule Builder Modal'
 									/>
-									<Label>Checkbox</Label>
-								</div>
-								<div className='flex items-center gap-2'>
-									<Switch checked={switchChecked} onCheckedChange={setSwitchChecked} />
-									<Label>Switch</Label>
-								</div>
-							</div>
-						</div>
-					</TabsContent>
-
-					{/* Display Tab */}
-					<TabsContent value='display'>
-						<div className='space-y-6'>
-							<div>
-								<h3 className='text-base font-semibold mb-3'>Badges</h3>
-								<div className='flex flex-wrap gap-2'>
-									<Badge>Default</Badge>
-									<Badge variant='success'>Success</Badge>
-									<Badge variant='warning'>Warning</Badge>
-									<Badge variant='danger'>Danger</Badge>
-									<Badge variant='secondary'>Secondary</Badge>
-								</div>
-							</div>
-							<Separator />
-							<div>
-								<h3 className='text-base font-semibold mb-3'>Progress</h3>
-								<div className='space-y-3'>
-									<Progress value={25} className='h-2' />
-									<Progress value={60} className='h-2' />
-									<Progress value={90} className='h-2' />
+									<RuleBuilderModal
+										title='Rule Builder Modal'
+										description='Phasellus lacus massa cras ante integer tortor eu consequat.'
+										buttonText='Open Rule Builder Modal - Size LG'
+										size='lg'
+									/>
 								</div>
 							</div>
 						</div>
 					</TabsContent>
 
+					{/* Data Table Tab */}
+					<TabsContent value='data-table'>
+						<DataTableDemo />
+					</TabsContent>
+
+					{/* Detail View Tab */}
+					<TabsContent value='detail-view'>
+						<DetailViewDemo />
+					</TabsContent>
+
+					{/* Edit Patterns Tab */}
+					<TabsContent value='edit-patterns'>
+						<EditPatternsDemo />
+					</TabsContent>
 				</Tabs>
 			</section>
 		</div>

@@ -1,6 +1,12 @@
 import type { ReactNode } from "react"
 
 export type Alignment = "left" | "center" | "right"
+export type SortDirection = "asc" | "desc"
+
+export interface SortState {
+  key: string
+  direction: SortDirection
+}
 
 /**
  * Column configuration for data table
@@ -13,6 +19,10 @@ export interface Column<T> {
   maxWidth?: string | number
   align?: Alignment
   render: (item: T, index: number) => ReactNode
+  /** Enable sorting on this column */
+  sortable?: boolean
+  /** Custom sort comparator. If omitted, sorts by item[key] using default comparison */
+  sortFn?: (a: T, b: T) => number
   className?: string
   headerClassName?: string
   cellClassName?: string
@@ -63,6 +73,9 @@ export interface DataTableProps<T> {
   // Selection (optional)
   selectedItems?: string[]
   onSelectionChange?: (selectedIds: string[]) => void
+  // Sorting
+  sort?: SortState | null
+  onSortChange?: (sort: SortState | null) => void
   // Empty state
   emptyIcon?: React.ComponentType<{ className?: string }>
   emptyTitle?: string

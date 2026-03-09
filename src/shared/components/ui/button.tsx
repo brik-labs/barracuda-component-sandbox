@@ -18,8 +18,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground gap-2 rounded-md text-sm [&_svg]:size-4",
         ghost: "hover:bg-accent hover:text-accent-foreground gap-2 rounded-md text-sm [&_svg]:size-4",
         link: "text-primary underline-offset-4 hover:underline gap-2 rounded-md text-sm [&_svg]:size-4",
-        action: "bg-foreground text-[#fdfdfd] hover:bg-[#0a3540] gap-1.5 rounded-full text-sm shadow-[0_10px_28px_0_rgba(11,59,69,0.10),0_1px_2px_0_rgba(11,59,69,0.06)] [&_svg]:size-4",
-        "action-outline": "bg-card border border-foreground text-foreground hover:bg-gray-100 gap-2 rounded-full text-sm shadow-none [&_svg]:size-4",
+        action: "bg-foreground text-background hover:bg-foreground/90 gap-1.5 rounded-full text-sm shadow-[0_10px_28px_0_rgba(0,0,0,0.10),0_1px_2px_0_rgba(0,0,0,0.06)] [&_svg]:size-4",
+        "action-outline": "bg-card border border-foreground text-foreground hover:bg-accent gap-2 rounded-full text-sm shadow-none [&_svg]:size-4",
       },
       size: {
         default: "h-10 px-4 py-2",

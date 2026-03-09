@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { DataTable } from "@shared/components/data-table"
-import type { Column, TableAction } from "@shared/types/data-table"
+import type { Column, TableAction, SortState } from "@shared/types/data-table"
 import { Badge } from "@shared/components/ui/badge"
 import { Eye, Copy } from "lucide-react"
 
@@ -52,6 +52,7 @@ const columns: Column<Payment>[] = [
     key: "customer",
     header: "Customer",
     width: 160,
+    sortable: true,
     render: (item) => <span className="font-medium">{item.customer}</span>,
   },
   {
@@ -59,6 +60,7 @@ const columns: Column<Payment>[] = [
     header: "Amount",
     width: 120,
     align: "right",
+    sortable: true,
     render: (item) => (
       <span className="font-medium tabular-nums">
         {formatAmount(item.amount, item.currency)}
@@ -69,6 +71,7 @@ const columns: Column<Payment>[] = [
     key: "status",
     header: "Status",
     width: 110,
+    sortable: true,
     render: (item) => (
       <Badge variant={STATUS_VARIANTS[item.status]}>{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Badge>
     ),
@@ -85,6 +88,7 @@ const columns: Column<Payment>[] = [
     key: "date",
     header: "Date",
     width: 110,
+    sortable: true,
     render: (item) => (
       <span className="text-muted-foreground">{item.date}</span>
     ),
@@ -107,6 +111,7 @@ export function DataTableDemo() {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [activeItemId, setActiveItemId] = useState<string | undefined>()
   const [page, setPage] = useState(1)
+  const [sort, setSort] = useState<SortState | null>(null)
 
   return (
     <div className="space-y-6">
@@ -126,6 +131,8 @@ export function DataTableDemo() {
             activeItemId={activeItemId}
             rowActions={rowActions}
             hoverActions={hoverActions}
+            sort={sort}
+            onSortChange={setSort}
             pagination={{
               currentPage: page,
               totalPages: 5,

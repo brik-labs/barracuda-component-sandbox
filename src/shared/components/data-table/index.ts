@@ -7,6 +7,8 @@ export type {
   TableAction,
   TableActionGroup,
   TableActions,
+  SortDirection,
+  SortState,
   PaginationProps,
   DataTableProps,
 } from "@shared/types/data-table"

@@ -47,6 +47,17 @@
   --text-muted: #8fa5a9;
   --text-secondary: #3c626a;
 
+  /* Chart Colors */
+  --chart-1: #0B3B45;
+  --chart-2: #038A6C;
+  --chart-3: #D4960A;
+  --chart-4: #FF5630;
+  --chart-5: #475569;
+  --chart-grid: #E2E8F0;
+  --chart-axis: #4A6970;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #E2E8F0;
+
   /* Sidebar Theme */
   --sidebar-background: #fafafa;
   --sidebar-foreground: #1e293b;
@@ -92,6 +103,30 @@
   --border: #334155;
   --input: #334155;
   --ring: #04BF8A;
+
+  /* Component Backgrounds */
+  --component-background: #1e293b;
+
+  /* Neutral Grays */
+  --gray-50: #1e293b;
+  --gray-100: #253344;
+  --gray-200: #2d3d4e;
+  --gray-border: #334155;
+
+  /* Text Colors */
+  --text-muted: #64748b;
+  --text-secondary: #94a3b8;
+
+  /* Chart Colors */
+  --chart-1: #7dd3fc;
+  --chart-2: #04BF8A;
+  --chart-3: #FFC400;
+  --chart-4: #FF7452;
+  --chart-5: #94a3b8;
+  --chart-grid: #334155;
+  --chart-axis: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-tooltip-border: #334155;
 
   /* Sidebar Theme */
   --sidebar-background: #1e293b;

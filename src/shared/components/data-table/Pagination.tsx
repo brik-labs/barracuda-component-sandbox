@@ -45,7 +45,7 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   const buttonStyles =
-    "h-9 text-sm border border-transparent rounded-xl text-foreground hover:bg-white hover:border-sidebar-border hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    "h-9 text-sm border border-transparent rounded-xl text-foreground hover:bg-card hover:border-sidebar-border hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 
   return (
     <nav
@@ -93,7 +93,7 @@ export function Pagination({
                   buttonStyles,
                   "w-9 p-0",
                   currentPage === page &&
-                    "bg-white border-sidebar-border shadow-sm"
+                    "bg-card border-sidebar-border shadow-sm"
                 )}
                 aria-label={`Go to page ${page}`}
                 aria-current={currentPage === page ? "page" : undefined}
