@@ -24,13 +24,28 @@ Defined in both `tsconfig.json` and `vite.config.ts`.
 
 This is a **component sandbox** for prototyping shared UI components extracted from the Barracuda verticals app (`/home/pavel/brik/verticals/barracuda/`). It's a single-page Vite + React 18 + TypeScript + Tailwind CSS app.
 
-**Entry flow**: `main.tsx` → `App.tsx` (wraps in AppProviders) → `ComponentShowcase.tsx` (interactive demo page with tabs)
+**Entry flow**: `main.tsx` → `App.tsx` (wraps in AppProviders) → `ComponentShowcase.tsx` (interactive demo page)
+
+### Showcase Layout
+
+`ComponentShowcase.tsx` is organized into two sections:
+
+- **UI Primitives** — tabs: Display, Buttons, Inputs, Filters, Charts
+- **Page Components** — tabs: Data Table, Detail View, Edit Patterns, Rules, Info Box
+
+Demo components live in `src/app/demos/` (DataTableDemo, DetailViewDemo, EditPatternsDemo, ChartsDemo).
 
 ### Shared Library (`src/shared/`)
 
 The core reusable code lives here. Key areas:
 
 - **`components/ui/`** — Shadcn/Radix-based primitives (button, dialog, popover, select, calendar, etc.). Follow the shadcn pattern: each file exports a set of composed Radix primitives styled with CVA + `cn()`.
+
+- **`components/charts/`** — Recharts-based visualization components:
+  - `LineChart.tsx` — Multi-series line chart (dashed comparison lines, custom tooltips, label mapping)
+  - `BarChart.tsx` — Bar chart with horizontal/vertical layout, rounded corners
+  - Both read theme colors from CSS variables (`--chart-1` through `--chart-5`, `--chart-grid`, etc.) at runtime via `cssVar()` helper with fallbacks
+  - Uses Monument Grotesk Mono for axis labels
 
 - **`components/filters/`** — Filter system with a layered architecture:
   - `base/` — Generic filter shells (FilterButton, MultiSelectFilter, SearchableSelectFilter)
@@ -43,60 +58,55 @@ The core reusable code lives here. Key areas:
   - `rule-builder.tsx` — Main component managing criteria rows + action
   - `rule-builder-modal.tsx` — Dialog wrapper (sm/lg sizes)
   - `components/primitives/` — Layout building blocks (Section, Label, Rows, Row, Cols, Col)
-  - `components/rule-builder-param-row/` — Per-row UI with param/operator/value selects and `input-factory.tsx` for type-based inputs (date, number, select, text)
-  - `use-rule-builder-rows.ts` — Row state management hook
+  - `components/rule-builder-param-row/` — Per-row UI with param/operator/value selects and `input-factory.tsx` for type-based inputs
   - Config loaded from `src/data/rule-builder-data.json`
 
 - **`components/data-table/`** — Full-featured data table:
-  - `DataTable.tsx` — Main component (selection, actions, hover actions, pagination, loading/empty states)
+  - `DataTable.tsx` — Main component (selection, sorting, actions, hover actions, pagination, loading/empty states)
+  - `DataTableHeader.tsx` — Sortable column headers (cycles: asc → desc → none)
   - `Row.tsx`, `Cell.tsx` — Memoized row and cell renderers
-  - `DataTableHeader.tsx`, `DataTableBody.tsx` — Table structure
   - `HoverActions.tsx` — Action buttons visible on row hover
   - `Pagination.tsx` — Page navigation with smart ellipsis
-  - `LoadingSkeleton.tsx`, `EmptyState.tsx` — Loading and empty states
-  - `hooks/` — `use-data-table-selection`, `use-table-scroll`, `use-scroll-to-active-row`
-  - `sticky-column-variants.ts` — CVA variants for sticky action column
-  - Types in `types/data-table.ts`: `Column<T>`, `TableAction<T>`, `DataTableProps<T>`
+  - `LoadingSkeleton.tsx` — Shimmer animation using inline CSS variables (dark mode aware)
+  - Types in `types/data-table.ts`: `Column<T>`, `TableAction<T>`, `DataTableProps<T>`, `SortState`
 
 - **`components/detail-view/`** — Entity detail page system:
-  - `EntityDetailPage.tsx` — Full-page shell (status panel + section slots)
-  - `EntityStatusPanel.tsx` — Header card with primary value, status bar, metadata, actions, navigation
-  - `NavigationHeader.tsx` — Close/prev/next buttons
-  - `SectionCard.tsx` — Card wrapper with title and actions (supports two-column detail layout)
+  - `EntityDetailPage.tsx` — Flat layout shell (no built-in padding/max-width — parent controls layout)
+  - `EntityStatusPanel.tsx` — Header with primary value, status badge, metadata, actions, navigation
+  - `SectionCard.tsx` — Card wrapper with title and actions (supports compact and detail-view layouts)
   - `DetailSection.tsx` — SectionCard + DetailsList with show more/less
   - `DetailRow.tsx` — Label/value pair (copyable, badge variants)
-  - `DetailsList.tsx` — Collection of DetailRows
   - `constants.ts` — `DETAIL_SPACING` and `DETAIL_TEXT` design tokens
   - Types in `types/detail-view.ts`: `DetailItem`, `StatusPanelConfig<T>`, `SectionConfig`
 
 - **`components/edit-sheet/`** — Sheet (slide-in) edit pattern:
   - `EditSheet.tsx` — Composed sheet with header, scrollable body, and save/cancel footer
-  - Built on `ui/sheet.tsx` primitive (Radix dialog-based, right-side slide-in)
 
 - **`components/inline-edit/`** — Inline edit pattern:
   - `InlineEditSection.tsx` — Section card that toggles between read-only and edit mode in-place
-  - Supports controlled/uncontrolled editing state, save/cancel footer
-
-- **`components/entity-list-page/`** — List page layout shell:
-  - `EntityListPage.tsx` — Composes page header + filters + table + optional side panel
-  - Responsive panel: table shrinks to 60% when panel is open
-
-- **`components/grouped-list/`** — Expandable accordion groups:
-  - `GroupedListView.tsx` — Generic grouped list with collapsible sections
-  - `GroupConfig<T>` type for group definitions with items, badge, actions
 
 - **`lib/utils.ts`** — `cn()` helper (clsx + tailwind-merge)
+- **`lib/z-index.ts`** — Z-index layering system (classes for SHEET, OVERLAY, MODAL, etc.)
 - **`lib/filters/`** — Filter option data and factory functions
-- **`types/`** — Shared TypeScript types (filters.ts, dateFilter.ts, amountFilter.ts)
+- **`types/`** — Shared TypeScript types (filters.ts, dateFilter.ts, amountFilter.ts, data-table.ts, detail-view.ts)
 - **`utils/`** — FilterSessionManager (localStorage), filterValidation, dateFilterUtils
 
 ### Theming
 
 CSS variable-based theming with light/dark mode (class-based toggle via ThemeProvider). Variables defined in `src/styles/theme.css`, consumed by Tailwind config. Primary color is teal (`#038A6C` light / `#04BF8A` dark).
 
+**Dark mode**: All components use semantic color tokens (`bg-card`, `bg-background`, `text-foreground`, etc.) instead of hardcoded colors. Chart components use `--chart-*` CSS variables with dark mode values defined in `.dark {}`.
+
+### Design Conventions
+
+- **Fonts**: Roobert (body, 300 weight default) + Monument Grotesk Mono (uppercase via `.font-mono` global rule)
+- **Font hierarchy**: page-title (36px) → section-header (24px) → card/tab title (16px) → sub-heading (16px semibold) → body (14px)
+- **Capitalization**: UPPERCASE only for mono category markers/table headers; Title Case for interactive elements; Sentence case for descriptions
+- **Colors**: Use CSS variables, never hardcoded hex in components. `bg-gray-200` resolves to `var(--gray-200)` (theme override, not default Tailwind)
+
 ### App-Specific Code
 
-- `src/app/` — App shell and ComponentShowcase demo page
+- `src/app/` — App shell, ComponentShowcase, and `demos/` directory
 - `src/components/` — App-only components (e.g., SampleMetricCard)
 - `src/providers/` — AppProviders (ThemeProvider, TooltipProvider, Toaster)
 - `src/data/` — Static config data (rule-builder-data.json)
