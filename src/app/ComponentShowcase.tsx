@@ -39,7 +39,9 @@ import RuleBuilderModal from '@/shared/components/rule-builder-modal/rule-builde
 import { DataTableDemo } from './demos/DataTableDemo';
 import { DetailViewDemo } from './demos/DetailViewDemo';
 import { EditPatternsDemo } from './demos/EditPatternsDemo';
+import { AddPatternDemo } from './demos/AddPatternDemo';
 import { ChartsDemo } from './demos/ChartsDemo';
+import { PageSkeletonDemo } from './demos/PageSkeletonDemo';
 
 export function ComponentShowcase() {
 	const { theme, setTheme } = useTheme();
@@ -431,6 +433,7 @@ export function ComponentShowcase() {
 					<TabsList className='mb-6'>
 						<TabsTrigger value='data-table'>Data Table</TabsTrigger>
 						<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
+						<TabsTrigger value='add-pattern'>Add Pattern</TabsTrigger>
 						<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
 						<TabsTrigger value='rules'>Rules</TabsTrigger>
 						<TabsTrigger value='info-box'>Info Box</TabsTrigger>
@@ -486,11 +489,27 @@ export function ComponentShowcase() {
 						<DetailViewDemo />
 					</TabsContent>
 
+					{/* Add Pattern Tab */}
+					<TabsContent value='add-pattern'>
+						<AddPatternDemo />
+					</TabsContent>
+
 					{/* Edit Patterns Tab */}
 					<TabsContent value='edit-patterns'>
 						<EditPatternsDemo />
 					</TabsContent>
 				</Tabs>
+			</section>
+
+			<Separator className='mb-10' />
+
+			{/* ===== Page Skeleton ===== */}
+			<section>
+				<h2 className='section-header mb-6'>Page Skeleton</h2>
+				<p className='text-muted-foreground text-sm mb-6'>
+					Full page flow: quick filters, advanced filters, data table, and detail view on row click.
+				</p>
+				<PageSkeletonDemo />
 			</section>
 		</div>
 	);
