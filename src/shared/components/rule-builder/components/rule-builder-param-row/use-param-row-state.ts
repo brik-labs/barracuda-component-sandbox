@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { RowData, RuleBuilderParam, RuleBuilderParamOperator, RuleBuilderParamOperators } from '../../rule-builder.types';
 
 export interface UseParamRowStateArgs {

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Info } from 'lucide-react';
 import { useTheme } from '@shared/components/ui/hooks/use-theme';
 import { Button } from '@shared/components/ui/button';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@shared/components/ui/tooltip';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/components/ui/card';
 import { Input } from '@shared/components/ui/input';
 import { Label } from '@shared/components/ui/label';
@@ -43,10 +44,60 @@ import { AddPatternDemo } from './demos/AddPatternDemo';
 import { ChartsDemo } from './demos/ChartsDemo';
 import { PageSkeletonDemo } from './demos/PageSkeletonDemo';
 
+const tabComponentInfo: Record<string, string[]> = {
+	display: ['Badge', 'Progress', 'Separator'],
+	buttons: ['Button (variants: default, destructive, outline, secondary, ghost, link, action, action-outline)'],
+	inputs: ['Input', 'Select / SelectTrigger / SelectValue / SelectContent / SelectItem', 'Textarea', 'Checkbox', 'Switch', 'Label'],
+	filters: [
+		'DateFilter (mode: full | select)',
+		'DatePicker / DateRangePicker',
+		'AmountFilterDropdown',
+		'MultiSelectFilter',
+		'SearchableSelectFilter',
+		'BankFilter / ChannelFilter / CurrencyFilter / ProcessorFilter (factory filters)',
+		'SelectionActions',
+	],
+	charts: ['LineChart', 'BarChart'],
+	'data-table': ['DataTable', 'TableFilters'],
+	'detail-view': ['EntityDetailPage', 'EntityStatusPanel', 'SectionCard', 'DetailSection', 'DetailRow'],
+	'add-pattern': ['DropdownMenu (+ icon pattern)', 'EditSheet'],
+	'edit-patterns': ['EditSheet (sheet edit)', 'InlineEditSection (inline edit)'],
+	rules: ['RuleBuilder', 'RuleBuilderModal'],
+	'info-box': ['Card / CardHeader / CardTitle / CardContent (metric card pattern)'],
+	skeleton: [
+		'Full page flow combining:',
+		'DropdownMenu (+ add menu) → EditSheet (create form)',
+		'TableFilters → DataTable (list view)',
+		'EntityDetailPage → EntityStatusPanel → DetailSection (detail view)',
+	],
+};
+
+function TabInfoIcon({ tabKey }: { tabKey: string }) {
+	const components = tabComponentInfo[tabKey];
+	if (!components) return null;
+	return (
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<button className='inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors ml-1.5'>
+					<Info className='h-3.5 w-3.5' />
+				</button>
+			</TooltipTrigger>
+			<TooltipContent side='bottom' className='max-w-xs text-left'>
+				<p className='font-medium mb-1'>Components on this tab:</p>
+				{components.map((c, i) => (
+					<p key={i} className='text-[11px] leading-relaxed opacity-90'>{c}</p>
+				))}
+			</TooltipContent>
+		</Tooltip>
+	);
+}
+
 export function ComponentShowcase() {
 	const { theme, setTheme } = useTheme();
 	const [checkboxChecked, setCheckboxChecked] = useState(false);
 	const [switchChecked, setSwitchChecked] = useState(false);
+	const [primitiveTab, setPrimitiveTab] = useState('display');
+	const [componentTab, setComponentTab] = useState('data-table');
 
 	// Filter states
 	const [dateFilterValue, setDateFilterValue] = useState<DateFilterValue | null>(null);
@@ -89,14 +140,17 @@ export function ComponentShowcase() {
 
 				{/* ===== UI Primitives ===== */}
 				<TabsContent value='primitives'>
-					<Tabs defaultValue='display' className='w-full'>
-						<TabsList className='mb-6'>
-							<TabsTrigger value='display'>Display</TabsTrigger>
-							<TabsTrigger value='buttons'>Buttons</TabsTrigger>
-							<TabsTrigger value='inputs'>Inputs</TabsTrigger>
-							<TabsTrigger value='filters'>Filters</TabsTrigger>
-							<TabsTrigger value='charts'>Charts</TabsTrigger>
-						</TabsList>
+					<Tabs value={primitiveTab} onValueChange={setPrimitiveTab} className='w-full'>
+						<div className='flex items-center gap-2 mb-6'>
+							<TabsList>
+								<TabsTrigger value='display'>Display</TabsTrigger>
+								<TabsTrigger value='buttons'>Buttons</TabsTrigger>
+								<TabsTrigger value='inputs'>Inputs</TabsTrigger>
+								<TabsTrigger value='filters'>Filters</TabsTrigger>
+								<TabsTrigger value='charts'>Charts</TabsTrigger>
+							</TabsList>
+							<TabInfoIcon tabKey={primitiveTab} />
+						</div>
 
 						{/* Buttons Tab */}
 						<TabsContent value='buttons'>
@@ -429,15 +483,18 @@ export function ComponentShowcase() {
 
 				{/* ===== Page Components ===== */}
 				<TabsContent value='components'>
-					<Tabs defaultValue='data-table' className='w-full'>
-						<TabsList className='mb-6'>
-							<TabsTrigger value='data-table'>Data Table</TabsTrigger>
-							<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
-							<TabsTrigger value='add-pattern'>Add Pattern</TabsTrigger>
-							<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
-							<TabsTrigger value='rules'>Rules</TabsTrigger>
-							<TabsTrigger value='info-box'>Info Box</TabsTrigger>
-						</TabsList>
+					<Tabs value={componentTab} onValueChange={setComponentTab} className='w-full'>
+						<div className='flex items-center gap-2 mb-6'>
+							<TabsList>
+								<TabsTrigger value='data-table'>Data Table</TabsTrigger>
+								<TabsTrigger value='detail-view'>Detail View</TabsTrigger>
+								<TabsTrigger value='add-pattern'>Add Pattern</TabsTrigger>
+								<TabsTrigger value='edit-patterns'>Edit Patterns</TabsTrigger>
+								<TabsTrigger value='rules'>Rules</TabsTrigger>
+								<TabsTrigger value='info-box'>Info Box</TabsTrigger>
+							</TabsList>
+							<TabInfoIcon tabKey={componentTab} />
+						</div>
 
 						{/* Info Box Tab */}
 						<TabsContent value='info-box'>
@@ -503,6 +560,10 @@ export function ComponentShowcase() {
 
 				{/* ===== Page Skeleton ===== */}
 				<TabsContent value='skeleton'>
+					<div className='flex items-center gap-2 mb-4'>
+						<span className='text-sm text-muted-foreground'>Full page flow demo</span>
+						<TabInfoIcon tabKey='skeleton' />
+					</div>
 					<PageSkeletonDemo />
 				</TabsContent>
 			</Tabs>

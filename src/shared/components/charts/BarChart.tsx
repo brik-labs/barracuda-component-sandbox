@@ -129,7 +129,7 @@ export function BarChart({
               fontSize: '12px',
               fontFamily: 'Monument Grotesk Mono, sans-serif',
             }}
-            formatter={formatTooltip ? (value?: number) => formatTooltip(value ?? 0) : undefined}
+            formatter={formatTooltip ? ((value: unknown) => formatTooltip(typeof value === 'number' ? value : 0)) as never : undefined}
           />
         )}
         {showLegend && <Legend wrapperStyle={{ fontFamily: 'Monument Grotesk Mono, sans-serif', fontSize: '12px' }} />}

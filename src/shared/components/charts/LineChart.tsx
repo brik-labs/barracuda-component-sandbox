@@ -89,7 +89,7 @@ export function LineChart({
   xAxisKey = 'name',
   formatYAxis,
   formatTooltip,
-  tooltipVariant = 'default',
+  tooltipVariant: _tooltipVariant = 'default',
   dashedKeys = [],
   labelMap,
 }: LineChartProps) {
