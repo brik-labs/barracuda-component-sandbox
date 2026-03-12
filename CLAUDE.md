@@ -28,12 +28,17 @@ This is a **component sandbox** for prototyping shared UI components extracted f
 
 ### Showcase Layout
 
-`ComponentShowcase.tsx` is organized into two sections:
+`ComponentShowcase.tsx` has three top-level tabs:
 
-- **UI Primitives** — tabs: Display, Buttons, Inputs, Filters, Charts
-- **Page Components** — tabs: Data Table, Detail View, Edit Patterns, Rules, Info Box
+- **UI Primitives** — nested tabs: Display, Buttons, Inputs, Filters, Charts
+- **Page Components** — nested tabs: Data Table, Detail View, Add Pattern, Edit Patterns, Rules, Info Box
+- **Page Skeleton** — full page flow demo (title + add menu, filters, data table, detail view)
 
-Demo components live in `src/app/demos/` (DataTableDemo, DetailViewDemo, EditPatternsDemo, ChartsDemo).
+Demo components live in `src/app/demos/` (DataTableDemo, DetailViewDemo, EditPatternsDemo, AddPatternDemo, ChartsDemo, PageSkeletonDemo).
+
+### Add Pattern ("+' icon menu)
+
+Follows the Barracuda Sonar page pattern: a page title with a `+` icon button that opens a `DropdownMenu` with categorized creation options. Each menu item opens an `EditSheet` for the add form. Used in both the Add Pattern demo and the Page Skeleton demo. The Page Skeleton demo links the full flow: `+` menu → add sheet → "Create" button adds the item and navigates to its detail view.
 
 ### Shared Library (`src/shared/`)
 

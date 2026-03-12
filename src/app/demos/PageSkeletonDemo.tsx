@@ -1,8 +1,26 @@
 import { useState, useMemo, useCallback } from "react"
+import { Plus, Eye, Copy, ArrowLeft } from "lucide-react"
 import { DataTable } from "@shared/components/data-table"
 import type { Column, TableAction, SortState } from "@shared/types/data-table"
 import { Badge } from "@shared/components/ui/badge"
 import { Button } from "@shared/components/ui/button"
+import { Input } from "@shared/components/ui/input"
+import { Label } from "@shared/components/ui/label"
+import { Textarea } from "@shared/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@shared/components/ui/select"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@shared/components/ui/dropdown-menu"
 import TableFilters from "@shared/components/filters/TableFilters"
 import type { TableFiltersConfig, FilterConfig } from "@shared/types/filters"
 import {
@@ -11,7 +29,7 @@ import {
   DetailRow,
 } from "@shared/components/detail-view"
 import type { StatusPanelConfig, DetailItem } from "@shared/types/detail-view"
-import { Eye, Copy, ArrowLeft } from "lucide-react"
+import { EditSheet } from "@shared/components/edit-sheet"
 
 // ========================================
 // DATA TYPES
@@ -40,7 +58,7 @@ type StatusFilter = "all" | Transaction["status"]
 // MOCK DATA
 // ========================================
 
-const MOCK_TRANSACTIONS: Transaction[] = [
+const INITIAL_TRANSACTIONS: Transaction[] = [
   { id: "1", transactionRef: "txn_a1b2c3d4", customer: "Alice Johnson", email: "alice@company.com", amount: 125000, currency: "USD", status: "succeeded", method: "Visa •••• 4242", channel: "Online", date: "2026-03-09", description: "Monthly subscription", riskScore: "Low", merchant: "Acme Corp", program: "Default" },
   { id: "2", transactionRef: "txn_e5f6g7h8", customer: "Bob Smith", email: "bob@startup.io", amount: 89900, currency: "USD", status: "succeeded", method: "Mastercard •••• 5555", channel: "Online", date: "2026-03-09", description: "One-time purchase", riskScore: "Low", merchant: "TechStore", program: "Premium" },
   { id: "3", transactionRef: "txn_i9j0k1l2", customer: "Carol White", email: "carol@shop.eu", amount: 45000, currency: "EUR", status: "pending", method: "SEPA Direct Debit", channel: "Online", date: "2026-03-08", description: "Recurring payment", riskScore: "Medium", merchant: "EuroShop", program: "Default" },
@@ -86,6 +104,15 @@ const formatDate = (dateStr: string) => {
   const d = new Date(dateStr + "T00:00:00")
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
+
+const CURRENCY_OPTIONS_MAP: Record<string, string> = { USD: "$", EUR: "\u20AC", GBP: "\u00A3" }
+const METHOD_OPTIONS = [
+  { value: "visa", label: "Visa", template: "Visa •••• " },
+  { value: "mastercard", label: "Mastercard", template: "Mastercard •••• " },
+  { value: "amex", label: "Amex", template: "Amex •••• " },
+  { value: "sepa", label: "SEPA Direct Debit", template: "SEPA Direct Debit" },
+  { value: "ideal", label: "iDEAL", template: "iDEAL" },
+]
 
 // ========================================
 // TABLE COLUMNS
@@ -277,6 +304,9 @@ function getRiskDetails(txn: Transaction): DetailItem[] {
 // ========================================
 
 export function PageSkeletonDemo() {
+  // Data state
+  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS)
+
   // View state
   const [view, setView] = useState<"list" | "detail">("list")
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
@@ -293,18 +323,73 @@ export function PageSkeletonDemo() {
   // Page size
   const [pageSize, setPageSize] = useState(10)
 
+  // Add sheet state
+  const [addSheetOpen, setAddSheetOpen] = useState(false)
+  const [addCustomer, setAddCustomer] = useState("")
+  const [addEmail, setAddEmail] = useState("")
+  const [addAmount, setAddAmount] = useState("")
+  const [addCurrency, setAddCurrency] = useState("USD")
+  const [addMethod, setAddMethod] = useState("visa")
+  const [addChannel, setAddChannel] = useState("Online")
+  const [addDescription, setAddDescription] = useState("")
+
+  const resetAddForm = () => {
+    setAddCustomer("")
+    setAddEmail("")
+    setAddAmount("")
+    setAddCurrency("USD")
+    setAddMethod("visa")
+    setAddChannel("Online")
+    setAddDescription("")
+  }
+
+  const handleCreate = () => {
+    const id = String(Date.now())
+    const ref = `txn_${id.slice(-8)}`
+    const methodInfo = METHOD_OPTIONS.find((m) => m.value === addMethod)
+    const methodLabel = methodInfo
+      ? methodInfo.template + (["visa", "mastercard", "amex"].includes(addMethod) ? String(Math.floor(1000 + Math.random() * 9000)) : "")
+      : addMethod
+    const today = new Date().toISOString().slice(0, 10)
+
+    const newTxn: Transaction = {
+      id,
+      transactionRef: ref,
+      customer: addCustomer || "New Customer",
+      email: addEmail || "new@example.com",
+      amount: Math.round((parseFloat(addAmount) || 0) * 100),
+      currency: addCurrency,
+      status: "pending",
+      method: methodLabel,
+      channel: addChannel,
+      date: today,
+      description: addDescription || "New transaction",
+      riskScore: "Low",
+      merchant: "Acme Corp",
+      program: "Default",
+    }
+
+    setTransactions((prev) => [newTxn, ...prev])
+    resetAddForm()
+    setAddSheetOpen(false)
+
+    // Navigate to the detail view for the newly created transaction
+    setSelectedTransaction(newTxn)
+    setView("detail")
+  }
+
   // Computed: status counts for quick filter badges
   const statusCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: MOCK_TRANSACTIONS.length }
-    for (const txn of MOCK_TRANSACTIONS) {
+    const counts: Record<string, number> = { all: transactions.length }
+    for (const txn of transactions) {
       counts[txn.status] = (counts[txn.status] || 0) + 1
     }
     return counts
-  }, [])
+  }, [transactions])
 
   // Computed: filtered data
   const filteredData = useMemo(() => {
-    let data = MOCK_TRANSACTIONS
+    let data = transactions
 
     // Apply quick status filter
     if (statusFilter !== "all") {
@@ -312,7 +397,7 @@ export function PageSkeletonDemo() {
     }
 
     return data
-  }, [statusFilter])
+  }, [statusFilter, transactions])
 
   // Paginated data
   const paginatedData = useMemo(() => {
@@ -423,6 +508,31 @@ export function PageSkeletonDemo() {
   // ===== LIST VIEW =====
   return (
     <div className="space-y-0">
+      {/* Title + Add button */}
+      <div className="flex items-center gap-5 mb-6">
+        <h3 className="page-title">Skeleton</h3>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-lg border-foreground focus-visible:ring-offset-0"
+              aria-label="Create new"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuLabel className="text-xs text-muted-foreground uppercase tracking-wide">
+              Transactions
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setAddSheetOpen(true)}>
+              Add transaction
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       {/* Quick status filter cards */}
       <div className="flex gap-2 mb-4 w-full">
         {STATUS_FILTERS.map((sf) => {
@@ -491,6 +601,102 @@ export function PageSkeletonDemo() {
           } : undefined}
         />
       </div>
+
+      {/* Add Transaction Sheet */}
+      <EditSheet
+        open={addSheetOpen}
+        onOpenChange={setAddSheetOpen}
+        title="Add Transaction"
+        description="Create a new transaction entry."
+        onSave={handleCreate}
+        onCancel={resetAddForm}
+        saveLabel="Create"
+      >
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Customer Name</Label>
+            <Input
+              placeholder="e.g. Alice Johnson"
+              value={addCustomer}
+              onChange={(e) => setAddCustomer(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Email</Label>
+            <Input
+              type="email"
+              placeholder="e.g. alice@company.com"
+              value={addEmail}
+              onChange={(e) => setAddEmail(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Amount</Label>
+              <Input
+                type="number"
+                placeholder={`e.g. 1250.00`}
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Currency</Label>
+              <Select value={addCurrency} onValueChange={setAddCurrency}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(CURRENCY_OPTIONS_MAP).map(([code, symbol]) => (
+                    <SelectItem key={code} value={code}>
+                      {code} ({symbol})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Payment Method</Label>
+              <Select value={addMethod} onValueChange={setAddMethod}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {METHOD_OPTIONS.map((m) => (
+                    <SelectItem key={m.value} value={m.value}>
+                      {m.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Channel</Label>
+              <Select value={addChannel} onValueChange={setAddChannel}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Online">Online</SelectItem>
+                  <SelectItem value="POS">POS</SelectItem>
+                  <SelectItem value="MOTO">MOTO</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Description</Label>
+            <Textarea
+              placeholder="Transaction description..."
+              value={addDescription}
+              onChange={(e) => setAddDescription(e.target.value)}
+              rows={3}
+            />
+          </div>
+        </div>
+      </EditSheet>
     </div>
   )
 }
