@@ -137,3 +137,5 @@ libraries/*/.rush/
 libraries/*/dist/
 libraries/*/node_modules/
 libraries/*/rush-logs/
+
+*storybook.log

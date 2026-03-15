@@ -95,4 +95,4 @@ const RuleBuilder = forwardRef<HTMLDivElement, RuleBuilderProps>(
 );
 RuleBuilder.displayName = 'RuleBuilder';
 
-export default RuleBuilder;
+export { RuleBuilder };

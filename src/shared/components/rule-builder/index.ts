@@ -1,4 +1,4 @@
-export { default as RuleBuilder } from './rule-builder';
+export { RuleBuilder } from './rule-builder';
 
 export type {
 	RuleBuilderAction,

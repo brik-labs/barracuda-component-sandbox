@@ -21,7 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@shared/components/ui/dropdown-menu"
-import TableFilters from "@shared/components/filters/TableFilters"
+import { TableFilters } from "@shared/components/filters/TableFilters"
 import type { TableFiltersConfig, FilterConfig } from "@shared/types/filters"
 import {
   EntityDetailPage,

@@ -173,6 +173,8 @@ const SearchableMultiSelectFilter = <T extends SearchableMultiSelectOption>({
   )
 }
 
-export default React.memo(SearchableMultiSelectFilter) as <T extends SearchableMultiSelectOption>(
+const SearchableMultiSelectFilterMemo = React.memo(SearchableMultiSelectFilter) as <T extends SearchableMultiSelectOption>(
   props: SearchableMultiSelectFilterProps<T>
 ) => React.ReactElement
+
+export { SearchableMultiSelectFilterMemo as SearchableMultiSelectFilter }

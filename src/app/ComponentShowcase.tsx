@@ -34,8 +34,8 @@ import type { AmountFilterValue } from '@shared/types/amountFilter';
 import type { DateRange } from 'react-day-picker';
 
 import ruleBuilderData from '@/data/rule-builder-data.json';
-import RuleBuilder from '@/shared/components/rule-builder/rule-builder';
-import RuleBuilderModal from '@/shared/components/rule-builder-modal/rule-builder-modal';
+import { RuleBuilder } from '@/shared/components/rule-builder/rule-builder';
+import { RuleBuilderModal } from '@/shared/components/rule-builder-modal/rule-builder-modal';
 
 import { DataTableDemo } from './demos/DataTableDemo';
 import { DetailViewDemo } from './demos/DetailViewDemo';

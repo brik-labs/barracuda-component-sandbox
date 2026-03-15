@@ -145,4 +145,4 @@ const TableFilters = memo(function TableFilters({
   )
 })
 
-export default TableFilters
+export { TableFilters }

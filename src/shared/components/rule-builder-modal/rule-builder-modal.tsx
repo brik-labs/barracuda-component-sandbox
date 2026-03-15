@@ -12,7 +12,7 @@ import {
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import ruleBuilderData from '@/data/rule-builder-data.json';
-import RuleBuilder from '@/shared/components/rule-builder/rule-builder';
+import { RuleBuilder } from '@/shared/components/rule-builder/rule-builder';
 import { cn } from '@/shared/lib/utils';
 import { useState } from 'react';
 import { RowData } from '@/shared/components/rule-builder/rule-builder.types';
@@ -100,4 +100,4 @@ const RuleBuilderModal = ({
 	);
 };
 
-export default RuleBuilderModal;
+export { RuleBuilderModal };
